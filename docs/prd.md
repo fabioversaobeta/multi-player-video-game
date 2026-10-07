@@ -1,197 +1,284 @@
-# PRD - Multi-Player Video Game
+# PRD: Multi-Player Video Game
 
-## 📋 Visão Geral
+## 1. Resumo Executivo
 
-**Nome:** Multi-Player Video Game  
-**Objetivo:** Plataforma de jogos retro multiplayer para jogar em grupo na TV, onde cada jogador controla via celular. Experiência social nostálgica, competitiva e sem fricção.
+**Produto:** Plataforma de jogos retro multiplayer acessível via QR code  
+**Público:** Jovens adultos nostálgicos (18-40 anos)  
+**MVP:** Tetris + Pac-Man, até 4 jogadores, leaderboard global  
+**Timeline:** 14 semanas  
+**Sucesso:** Latência <200ms, 4 players sincronizados, ranking em tempo real  
 
-**Público-alvo:** Jovens adultos (18-40 anos) que cresceram com consoles clássicos (Super Nintendo, Playstation 1) ou têm interesse em jogos retro.
+---
 
-**Diferencial competitivo:**
-- One-click entry via QR code (sem cadastro complicado)
-- Multiplayer até 4 jogadores simultâneos
+## 2. Problemas que Resolve
+
+| Problema | Solução |
+|----------|---------|
+| Jogos retro não são acessíveis (emuladores complicados) | Plataforma web 100% online, sem instalação |
+| Multiplayer local é difícil em um controle | Cada jogador usa seu celular como controle |
+| Sem competição social | Ranking de sessão + leaderboard global |
+| Configuração complexa | Escaneie QR → informe nome → pronto |
+| Não há nostalgia + conveniência juntas | Jogos clássicos, interface moderna, sem fricção |
+
+---
+
+## 3. Requisitos Funcionais
+
+### 3.1 Fluxo de Entrada (Fase 2)
+
+**RF-001: Geração de Sessão**
+- Host abre página da TV
+- Clica "Nova Sessão" → gera QR code único
+- QR válido por 10 minutos
+- QR aponta para `https://seu-dominio/join?session_id=xyz`
+
+**RF-002: Entrada via Celular**
+- Jogador escaneia QR
+- Pede nome do jogador (campo de texto)
+- Oferece 4 cores/avatares (vermelho, azul, amarelo, verde)
+- Botão "Conectar"
+- Limite: máximo 4 jogadores por sessão
+
+**RF-003: Sincronização de Jogadores**
+- TV mostra lista em tempo real de quem conectou
+- Nome + cor de cada jogador
+- Feedback ao conectar e desconectar
+- Status: "aguardando", "pronto", "em jogo"
+
+**RF-004: Início do Jogo**
+- Botão "Iniciar" aparece quando ≥1 jogador conectado
+- Host clica → countdown 3s na TV + celulares
+- Todos recebem `game:start` simultâneamente
+- Jogo começa sincronizado
+
+---
+
+### 3.2 Controle via Celular (Fase 3)
+
+**RF-005: Botões de Controle**
+- 4 botões grandes no celular:
+  - **← Esquerda** | **Direita →** (topo)
+  - **⟳ Rotacionar** (centro)
+  - **↓ Descer Rápido** (abaixo)
+- Feedback visual ao pressionar (cor muda, botão "pressionado")
+- Sem gestos (MVP usa botões, mais previsível)
+
+**RF-006: Envio de Input**
+- Ao pressionar botão, emite evento `player:input`
+- Inclui: session_id, player_id, ação (left, right, rotate, drop)
+- Latência alvo: <200ms fim a fim
+
+**RF-007: Validação de Input**
+- Servidor valida se movimento é legal no grid
+- Se válido: atualiza estado, broadcast para TV
+- Se inválido: descarta silenciosamente (sem erro visual)
+
+---
+
+### 3.3 Tetris Multiplayer (Fase 1 + 3)
+
+**RF-008: Game Loop Tetris**
+- 7 peças (I, O, T, S, Z, J, L) em cores diferentes
+- Grid 10x20 por jogador
+- Peça cai automaticamente
+- Velocidade aumenta a cada N linhas limpas (ex: a cada 5)
+
+**RF-009: Mecânicas de Tetris**
+- Rotação: clockwise, validação de colisão
+- Limpeza de linhas: detecta linhas completas, remove e desce linhas acima
+- Animação de "pisca" antes de remover
+- Próxima peça visível no celular (preview)
+
+**RF-010: Game Over Individual**
+- Game over quando peça nova não cabe no topo do grid
+- Jogador vira "inativo" (grid cinzento na TV)
+- Outros continuam jogando normalmente
+- Celular exibe "Você perdeu! Aguarde o final…"
+
+**RF-011: Score Tetris**
+- 10 pts por peça colocada
+- 100 pts por linha limpa
+- Cálculo feito no servidor (source of truth)
+- Score exibido em tempo real na TV (embaixo de cada grid)
+
+---
+
+### 3.4 Pac-Man Multiplayer (Fase 4)
+
+**RF-012: Game Loop Pac-Man**
+- Grid 21x21 (mazelike)
+- 4 Pac-Mans (um por jogador, cores diferentes)
+- 1-2 fantasmas compartilhados (sincronizados para todos)
+- Pellets espalhados pelo mapa
+
+**RF-013: Mecânicas de Pac-Man**
+- Movimento: ↑ ↓ ← → via botões no celular
+- Coleta de pellets: desaparecem do mapa, +10 pts
+- Power-ups: pellet especial = fantasmas vulneráveis por 5s, +50 pts
+- IA de fantasmas: movimento aleatório ou chase simples
+
+**RF-014: Game Over Pac-Man**
+- 3 vidas por jogador
+- Colisão com fantasma = -1 vida
+- 0 vidas = game over, vira espectador
+- Condição de vitória: todos pellets coletados OU tempo limite (3 min)
+
+---
+
+### 3.5 TV - Exibição de Gameplay (Fase 3)
+
+**RF-015: Layout de 4 Grids**
+- 4 mini-grids lado a lado (ou 2x2 conforme tamanho)
+- Cada grid mostra:
+  - Nome do jogador + cor (identificação clara)
+  - Grid do jogo (Tetris ou Pac-Man)
+  - Score atual
+  - Status (ativo/game over)
+- Fonte grande, legível de 2-3 metros
+
+**RF-016: Ranking em Tempo Real**
+- Ranking (1º, 2º, 3º, 4º) embaixo dos grids
+- Atualiza conforme scores mudam
+- Destaque visual para líder (borda colorida ou fundo)
+
+**RF-017: Feedback Visual**
+- Transições suaves entre telas (menu → jogo → resultados)
+- Cores retro (fundo preto, peças coloridas, UI clara)
+- Sem ambiguidades visuais
+
+---
+
+### 3.6 Resultados & Persistência (Fase 3-4)
+
+**RF-018: Tela de Resultados**
+- Exibe ranking final (1º, 2º, 3º, 4º) com scores
+- Botões: "Novo Jogo" ou "Voltar ao Menu"
+- Mostra por 5-10 segundos automaticamente
+
+**RF-019: Persistência de Resultado**
+- Salva no PostgreSQL:
+  - player_name, game_type (tetris/pacman), score, position, timestamp
+  - session_id (opcional, para rastrear sessão)
+- Preparado para leaderboard global
+
+**RF-020: Leaderboard Global**
+- GET `/api/leaderboard?game=tetris&limit=10`
+- Exibe Top 10 all-time por jogo
+- Acessível após cada partida (QR code no celular)
+- Ranking: score descending
+
+---
+
+### 3.7 Seleção de Jogo (Fase 4)
+
+**RF-021: Menu de Jogo**
+- Tela pré-sessão: escolher entre Tetris ou Pac-Man
+- Host seleciona, todos veem qual jogo vai ser
+- UI clara, sem confusão
+
+---
+
+## 4. Requisitos Não-Funcionais
+
+| ID | Requisito | Métrica |
+|----|-----------|---------|
+| RNF-001 | Performance | 30+ FPS na TV com 4 grids |
+| RNF-002 | Latência | <200ms fim a fim (input → feedback visual) |
+| RNF-003 | Escalabilidade | Mínimo 100 sessões simultâneas |
+| RNF-004 | Confiabilidade | Reconexão automática em <30s |
+| RNF-005 | Disponibilidade | 99.5% uptime (exceto manutenção) |
+| RNF-006 | Usabilidade | Zero treinamento necessário |
+| RNF-007 | Acessibilidade | WCAG 2.1 AA (contraste, fonte grande) |
+| RNF-008 | Segurança | Sem dados sensíveis, apenas score/nome |
+
+---
+
+## 5. Escopo & Out-of-Scope
+
+### ✅ IN-SCOPE
+
+- 2 jogos: Tetris, Pac-Man
+- Multiplayer até 4 jogadores
+- QR code para entrada
 - Ranking de sessão + leaderboard global
-- Jogos retro clássicos com controle adaptado para celular
+- Score individual por jogador
+- Reconexão automática
+- UI acessível (fonts grandes, contraste)
+
+### ❌ OUT-OF-SCOPE (MVP)
+
+- Chat entre jogadores
+- Convites por link/email
+- Histórico completo de partidas
+- Cosmetics/skins payable
+- Social login (Google, Facebook)
+- Mobile app nativa (só web)
+- Modo offline
+- Comentários/replay de partidas
+- Pontos de experiência (XP) ou badges
 
 ---
 
-## 🎮 Escopo - Fase 1 até 4
+## 6. Dependências Externas
 
-### **Jogos Suportados**
-1. **Tetris** (MVP - Fase 1)
-2. **Pac-Man** (Fase 4)
-3. **Snake** (Fase futura)
-4. **Space Invaders** (Fase futura)
-5. **Pong** (Fase futura)
-6. **Top Gear Simplificado** (Fase futura)
-
-### **Mecânica Competitiva**
-- **Score Individual:** Cada jogador tem seu próprio score
-- **Ranking de Sessão:** Ao final do jogo, ranking visível (1º, 2º, 3º, 4º)
-- **Leaderboard Global:** Top 10 all-time persistido no banco
-- **Nome Customizável:** Cada jogador escolhe seu nome ao conectar
-
-### **Conectividade**
-- **Internet:** Cada jogador pode usar seu próprio plano de dados ou Wi-Fi compartilhado
-- **Requisito:** Conexão estável para WebSocket (latência <200ms aceitável)
-- **Autenticação:** Simples por nome (sem login/senha no MVP)
-
-### **Features Principais**
-
-#### **Entrada & Sessão**
-- [x] Host gera QR code na TV
-- [x] Jogador escaneia QR com celular
-- [x] Inserir nome e escolher avatar/cor
-- [x] Máximo 4 jogadores por sessão
-- [x] Lista em tempo real de conectados na TV
-
-#### **Gameplay**
-- [x] Tetris: 10x20 grid, 7 peças, limpeza de linhas, aumento de dificuldade
-- [x] Controles: Botões grandes (← → ⟳ ↓) no celular
-- [x] Score em tempo real na TV
-- [x] Game over individual (outros continuam jogando)
-- [x] Ranking atualiza conforme jogadores terminam
-
-#### **Persistência & Dados**
-- [x] Score salvo por partida (player, game, score, posição, timestamp)
-- [x] Leaderboard global (Top 10 por jogo)
-- [x] Histórico de partidas do jogador (opcional MVP)
+- **CDN:** Para assets (imagens, sons retro)
+- **WebSocket Server:** Node.js + Socket.io
+- **Banco de Dados:** PostgreSQL + Redis
+- **Cloud Hosting:** AWS, Railway, Vercel ou similar
+- **Monitoramento:** Sentry (erro tracking)
 
 ---
 
-## 🚫 Out of Scope - Fase 1 a 4
+## 7. Critérios de Aceite (MVP)
 
-- ❌ Login/Autenticação com senha (nome simples apenas)
-- ❌ Cosmetics ou skins premium (validar primeiro com usuários)
-- ❌ Replay de partidas
-- ❌ Chat/Comunicação entre jogadores
-- ❌ Suporte a mobile-only (requer tela principal em TV)
-- ❌ Offline mode
-- ❌ Suporte a mais de 4 jogadores por sessão
-
----
-
-## 📱 Plataformas & Dispositivos
-
-| Contexto | Plataforma | Requisitos |
-|----------|-----------|-----------|
-| **TV/Host** | Navegador (Chrome, Firefox, Safari) | Tela ≥32", conexão internet estável |
-| **Celular** | iOS/Android (navegador ou app web) | Tela ≥4", internet (dados/Wi-Fi) |
-| **Servidor** | Node.js + Socket.io | Latência <200ms para jogabilidade |
+✅ Tetris single e multiplayer funcionais  
+✅ Pac-Man multiplayer funcional  
+✅ QR code gera e conecta até 4 jogadores  
+✅ Latência <200ms testada em 3G/4G  
+✅ Ranking sincronizado em tempo real  
+✅ Leaderboard global salvo no banco  
+✅ Reconexão automática <30s  
+✅ UI acessível (WCAG 2.1 AA)  
+✅ Zero crashes com 100 sessões simultâneas  
+✅ Deploy em staging + produção  
 
 ---
 
-## 🎯 Requisitos Funcionais por Fase
+## 8. Riscos & Mitigações
 
-### **Fase 1 - Tetris Single-Player (MVP Mecânica)**
-**Objetivo:** Validar game loop antes de multiplayer
-
-| ID | Requisito | Prioridade |
-|----|-----------|-----------|
-| RF-001 | Game loop Tetris: peças caem, rotação, colisão | CRÍTICA |
-| RF-002 | Limpeza de linhas automática | CRÍTICA |
-| RF-003 | Score atualiza por peça e linha | CRÍTICA |
-| RF-004 | Dificuldade aumenta (velocidade) | ALTA |
-| RF-005 | Game over detecta quando peça não cabe | CRÍTICA |
-| RF-006 | Botão "Novo Jogo" reinicia tudo | ALTA |
-| RF-007 | Melhor score persistido localmente | MÉDIA |
-
-### **Fase 2 - Infraestrutura Multiplayer**
-**Objetivo:** Backend + entrada de jogadores
-
-| ID | Requisito | Prioridade |
-|----|-----------|-----------|
-| RF-008 | Gerar QR code para sessão (TTL 10 min) | CRÍTICA |
-| RF-009 | Celular: escanear QR, inserir nome, escolher cor | CRÍTICA |
-| RF-010 | TV: lista de jogadores conectados em tempo real | CRÍTICA |
-| RF-011 | Máximo 4 jogadores por sessão (rejeitar 5º) | CRÍTICA |
-| RF-012 | Host: botão "Iniciar Jogo" com countdown 3s | ALTA |
-| RF-013 | Reconexão automática em 30s após desconexão | ALTA |
-| RF-014 | Timeout: desconectar após 30s sem atividade | MÉDIA |
-
-### **Fase 3 - Tetris Multiplayer Sincronizado**
-**Objetivo:** 4 grids sincronizados, ranking, persistência
-
-| ID | Requisito | Prioridade |
-|----|-----------|-----------|
-| RF-015 | Inputs do celular sincronizam com servidor (<200ms) | CRÍTICA |
-| RF-016 | TV: 4 mini-grids lado a lado | CRÍTICA |
-| RF-017 | Score individual por jogador, atualiza em tempo real | CRÍTICA |
-| RF-018 | Ranking em tempo real (1º, 2º, 3º, 4º) | ALTA |
-| RF-019 | Game over individual (grid fica inativo) | CRÍTICA |
-| RF-020 | Resultado final salvo no banco (player, score, posição) | CRÍTICA |
-| RF-021 | Tela de resultados com ranking e botão "Novo Jogo" | ALTA |
-
-### **Fase 4 - 2º Jogo + Leaderboard Global**
-**Objetivo:** Pac-Man + dados globais
-
-| ID | Requisito | Prioridade |
-|----|-----------|-----------|
-| RF-022 | Menu pré-sessão: escolher Tetris ou Pac-Man | ALTA |
-| RF-023 | Pac-Man: grid 21x21, pellets, fantasmas com IA | ALTA |
-| RF-024 | Controles Pac-Man: ↑ ↓ ← → sincronizados | ALTA |
-| RF-025 | Coleta de pellets: +10 pts, power-up: +50 pts | ALTA |
-| RF-026 | Game over: 3 vidas, colisão com fantasma = -1 | ALTA |
-| RF-027 | Leaderboard global: Top 10 all-time | ALTA |
-| RF-028 | Estatísticas do jogador: total partidas, melhor score | MÉDIA |
+| Risco | Probabilidade | Impacto | Mitigação |
+|-------|---------------|--------|-----------|
+| Sincronização fora de ordem | Alta | Alto | Server-side source of truth, event sourcing |
+| Latência >200ms em 3G | Média | Alto | Throttling de inputs, compressão de dados |
+| Desconexões abruptas | Média | Médio | Reconexão automática + cleanup de estado |
+| Perda de score em crash | Baixa | Médio | Persistência imediata no PostgreSQL |
+| Cheating (manipulação de score) | Baixa | Médio | Validação server-side de todos os inputs |
 
 ---
 
-## 🎨 Requisitos Não-Funcionais
+## 9. Métricas de Sucesso
 
-| Atributo | Critério | Justificativa |
-|----------|----------|---|
-| **Latência** | <200ms entre input celular e atualização TV | Gameplay em tempo real |
-| **Disponibilidade** | 99.5% uptime | Sessões não podem cair no meio do jogo |
-| **Performance** | 30+ FPS na TV com 4 grids | Experiência fluida |
-| **Escalabilidade** | 100+ sessões simultâneas | Suportar crescimento inicial |
-| **Acessibilidade** | WCAG 2.1 AA (cores + padrões, fontes grandes) | Público misto (idade/deficiências) |
-| **Segurança** | Validação server-side de inputs | Evitar cheating (score falso) |
-| **Usabilidade** | Fluxo QR → nome → jogo em <30s | Sem fricção |
-
----
-
-## 📊 Métricas de Sucesso
-
-| Métrica | Alvo | Período |
-|---------|------|---------|
-| Taxa de conclusão de jogo | >80% | 1º mês |
-| Tempo médio de sessão | 10-15 min | 1º mês |
-| Retenção (volta no mês seguinte) | >40% | 3 meses |
-| NPS (Net Promoter Score) | >50 | 3 meses |
-| Tempo de entrada (QR → jogo) | <30s | Launch |
-| Uptime | >99.5% | Contínuo |
+| Métrica | Alvo |
+|---------|------|
+| Latência P95 | <150ms |
+| Taxa de reconexão bem-sucedida | >95% |
+| Uptime | 99.5% |
+| Partidas completadas sem lag | >98% |
+| Usuários únicos por semana | >100 (fase 1) |
+| Taxa de retorno (play again) | >60% |
 
 ---
 
-## 🔄 Glossário
+## 10. Timeline Resumida
 
-| Termo | Definição |
-|-------|-----------|
-| **Sessão** | Uma instância de jogo com até 4 jogadores |
-| **Host/TV** | Tela principal (navegador desktop/tablet) que exibe jogo e controla sessão |
-| **Celular** | Dispositivo móvel (iOS/Android) que controla o jogador via botões |
-| **Ranking de Sessão** | Posição final dos 4 jogadores após jogo terminar |
-| **Leaderboard Global** | Top 10 all-time scores, persistido no banco |
-| **Score** | Pontos acumulados durante partida (Tetris: linhas; Pac-Man: pellets) |
-| **Game Over** | Momento em que jogador perde (Tetris: peça no topo; Pac-Man: 0 vidas) |
-| **QR Code** | Código para celular escanear e entrar na sessão |
-| **Avatar/Cor** | Identificação visual do jogador (vermelho, azul, amarelo, verde) |
-| **Pellet** | Item a coletar em Pac-Man (+10 pts) |
-| **Power-up** | Item especial que muda gameplay (Pac-Man: fantasmas vulneráveis) |
-
----
-
-## 📝 Próximos Passos
-
-1. ✅ PRD aprovado pelo chefe
-2. ⏳ Documentos técnicos: arquitetura, design, backlog detalhado
-3. ⏳ Prototipagem de UI (wireframes TV + celular)
-4. ⏳ Estrutura de banco de dados
-5. ⏳ Planning da Sprint 1 (Fase 1 - Tetris single-player)
+- **Sprint 1-2 (Fase 1):** Tetris single-player
+- **Sprint 3-4 (Fase 2):** Infraestrutura multiplayer + QR
+- **Sprint 5-6 (Fase 3):** Tetris multiplayer + ranking
+- **Sprint 7-10 (Fase 4):** Pac-Man + leaderboard + polish + deploy
 
 ---
 
 **Versão:** 1.0  
-**Última atualização:** 2026-10-07  
-**Proprietário:** Marina (Product Owner)
+**Data:** 2026  
+**Owner:** Marina (Product Owner)  
+**Revisão:** A cada sprint
