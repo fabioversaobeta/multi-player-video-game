@@ -1,252 +1,249 @@
-# ROADMAP - Multi-Player Video Game
+# Roadmap: Multi-Player Video Game
 
-## 🗓️ Timeline Geral
+**Versão:** 1.0  
+**Data:** 2026  
+**Owner:** Marina (Product Owner)  
+**Próxima revisão:** A cada final de sprint
 
-**Duração Total:** 14 semanas (3,5 meses)  
-**Start:** Semana 1  
-**MVP (Tetris Multiplayer):** Fim da Semana 10  
-**Launch (2 Jogos):** Fim da Semana 14
+---
+
+## 📅 Timeline Geral: 14 Semanas
 
 ```
-Sem 1-4:   FASE 1 (Tetris Single)
-Sem 5-6:   FASE 2 (Infra Multiplayer)
-Sem 7-10:  FASE 3 (Tetris Multiplayer)
-Sem 11-14: FASE 4 (2º Jogo + Polish)
+Semana 1-4   │ Semana 5-6   │ Semana 7-10  │ Semana 11-14
+─────────────┼──────────────┼──────────────┼─────────────
+  FASE 1     │   FASE 2     │   FASE 3     │  FASE 4
+ (MVP Single)│(Infraestrutura)(Multiplayer)│(2º Jogo+Deploy)
 ```
 
 ---
 
-## 📍 FASE 1: MVP Mecânica - Tetris Single-Player
-**Duração:** 4 semanas (Semanas 1-4)  
-**Objetivo:** Validar game loop e UI base antes de multiplayer  
-**Saída esperada:** Tetris jogável no navegador, sem multiplayer
+## 🎯 FASE 1: MVP Single-Player Tetris (4 Semanas)
 
-### Marcos
-- **Sem 1 (Sprint 1):** Game loop, peças, rotação, colisão ✅
-- **Sem 2 (Sprint 1 cont.):** Limpeza de linhas, score, UI básica ✅
-- **Sem 3 (Sprint 2):** Game over, persistência local, testes ✅
-- **Sem 4 (Sprint 2 cont.):** Polish visual, acessibilidade, pronto pra Fase 2 ✅
+**Objetivo:** Validar game loop, UI base e mecânicas de Tetris antes de multiplayer.
 
-### Recursos Alocados
-- **Dev Frontend:** 1 dev (60% Phaser/Canvas, 40% UI React)
-- **QA:** Testes básicos de game loop
-- **Designer:** Validação de paleta de cores retro
+**O que será entregue:**
+- ✅ Tetris jogável no navegador (desktop/mobile)
+- ✅ Score tracking local
+- ✅ UI clara e acessível (dark mode, fonts grandes)
+- ✅ Restart game funcional
+- ✅ Dificuldade progredindo
 
-### User Stories
-Veja `backlog-fase-1.md`
+**Arquitetura:**
+- Frontend: React + Canvas/Phaser
+- Backend: Node.js (setup inicial, sem real-time ainda)
+- Banco: SQLite local (preparação para PostgreSQL)
 
-### Entregáveis
-- ✅ Game Tetris funcional
-- ✅ Score persistido localmente
-- ✅ Prototipagem testada com usuários (opcional)
+**User Stories (Backlog Detalhado em backlog-fase-1.md):**
+- US-001: Jogar Tetris básico (peças caem, rotação, colisão)
+- US-002: Limpar linhas e aumentar score
+- US-003: Game over e reiniciar
+- US-004: Dificuldade progredindo
 
-### Critérios de Saída
-- Tetris completamente jogável
-- Latência <16ms local
-- UI responsiva em diferentes resoluções
-- Paleta de cores validada com acessibilidade WCAG AA
+**Métricas de Saída:**
+- ✅ 0 crashes em 1 hora de gameplay
+- ✅ FPS >30 em todos os navegadores testados
+- ✅ Usável sem tutorial
 
----
+**Dependências:** Nenhuma (MVP isolado)
 
-## 📍 FASE 2: Infraestrutura Multiplayer
-**Duração:** 2 semanas (Semanas 5-6)  
-**Objetivo:** Backend + sessões + entrada de jogadores (sem game logic)  
-**Saída esperada:** Infraestrutura pronta para sincronizar jogo
-
-### Marcos
-- **Sem 5 (Sprint 3):** QR code gerador, backend Socket.io, TV/celular básicos ✅
-- **Sem 6 (Sprint 4):** Sincronização de conexão, botão "Iniciar", testes de latência ✅
-
-### Recursos Alocados
-- **Dev Backend:** 1 dev (60% Socket.io, 40% QR/sessão)
-- **Dev Frontend:** 1 dev (80% UI TV/celular)
-- **DevOps:** Setup CI/CD, Redis, variáveis de ambiente
-
-### User Stories
-Veja `backlog-fase-2.md`
-
-### Entregáveis
-- ✅ Backend Node.js + Socket.io rodando
-- ✅ Fluxo QR code: geração → validação → entrada
-- ✅ Sincronização de lista de jogadores (TV ↔ Celular)
-- ✅ CI/CD básico configurado
-
-### Critérios de Saída
-- Latência WebSocket <100ms (local)
-- 4 jugadores conseguem conectar simultaneamente
-- Desconexão tratada gracefully
-- Deploy em staging possível
+**Aprovação:** Testes com usuários reais confirmam entendimento das regras
 
 ---
 
-## 📍 FASE 3: Tetris Multiplayer Sincronizado (MVP Completo)
-**Duração:** 4 semanas (Semanas 7-10)  
-**Objetivo:** Sincronizar Tetris para 4 jogadores, ranking, persistência  
-**Saída esperada:** Tetris multiplayer 100% funcional, pronto para usuários
+## 🎯 FASE 2: Infraestrutura Multiplayer (2 Semanas)
 
-### Marcos
-- **Sem 7 (Sprint 5):** Sincronização de inputs, 4 grids na TV, controles celular ✅
-- **Sem 8 (Sprint 6):** Score sincronizado, ranking real-time, game over individual ✅
-- **Sem 9 (Sprint 7):** Persistência no banco, resultados salvos ✅
-- **Sem 10 (Sprint 8):** Testes de escalabilidade, bugs, latência real ✅
+**Objetivo:** Montar plataforma de real-time, sessões e entrada de jogadores (sem game logic ainda).
 
-### Recursos Alocados
-- **Dev Frontend:** 1 dev (60% TV layout 4 grids, 40% atualizações real-time)
-- **Dev Backend:** 1 dev (70% sincronização, 30% persistência banco)
-- **QA:** Testes multiplayer, sincronização, edge cases
-- **DevOps:** Monitoramento, logs, alerts
+**O que será entregue:**
+- ✅ QR code gerado e funcional
+- ✅ Entrada de 4 jogadores via célular
+- ✅ Lista de jogadores sincronizada na TV
+- ✅ WebSocket conectando TV + celulares
+- ✅ Sessão com TTL (10 min)
 
-### User Stories
-Veja `backlog-fase-3.md`
+**Arquitetura:**
+- Backend: Node.js + Express + Socket.io + Redis
+- Frontend: React (TV) + React Web (celular)
+- Banco: PostgreSQL (sessões armazenadas)
+- Real-time: Redis pub/sub para broadcast
 
-### Entregáveis
-- ✅ Tetris multiplayer 4 jugadores sincronizado
-- ✅ Ranking de sessão em tempo real
-- ✅ Resultados persistidos no PostgreSQL
-- ✅ Leaderboard de sessão (Top 4)
-- ✅ Testes de sincronização com latência simulada
+**User Stories (Backlog Detalhado em backlog-fase-2.md):**
+- US-005: Gerar QR code de sessão
+- US-006: Escanear QR e conectar
+- US-007: Escolher avatar/cor
+- US-008: Sincronizar lista de jogadores na TV
+- US-009: Iniciar jogo (countdown 3s)
 
-### Critérios de Saída
-- Latência <200ms aceitável para gameplay
-- Sincronização consistente em 100 partidas
-- Zero race conditions em score/ranking
-- Database escalável (100+ partidas/dia)
-- 99.5% uptime em staging
+**Métricas de Saída:**
+- ✅ QR code escaneia e conecta em <5s
+- ✅ 4 jogadores entram simultaneamente sem erro
+- ✅ Latência de sincronização <100ms
+- ✅ Sessão limpa automaticamente após 10 min
 
----
+**Dependências:** 
+- Fase 1 completa (UI base)
+- Infra cloud (servidor Node.js, Redis, PostgreSQL)
 
-## 📍 FASE 4: 2º Jogo + Leaderboard Global + Polish
-**Duração:** 4 semanas (Semanas 11-14)  
-**Objetivo:** Adicionar Pac-Man, leaderboard global, deploy produção  
-**Saída esperada:** Plataforma com 2 jogos, pronta para launch
-
-### Marcos
-- **Sem 11 (Sprint 9):** Menu de seleção, Pac-Man game loop, IA fantasmas ✅
-- **Sem 12 (Sprint 10):** Pac-Man multiplayer sincronizado, coleta de pellets ✅
-- **Sem 13 (Sprint 11):** Leaderboard global, persistência all-time ✅
-- **Sem 14 (Sprint 12):** Deploy produção, monitoramento, documentação final ✅
-
-### Recursos Alocados
-- **Dev Frontend:** 1 dev (50% Pac-Man, 50% UI leaderboard)
-- **Dev Backend:** 1 dev (60% Pac-Man logic, 40% leaderboard/analytics)
-- **QA:** Testes multiplayer Pac-Man, leaderboard, edge cases
-- **Designer:** Validação visual Pac-Man, leaderboard UI
-- **DevOps:** Deploy produção, monitoring, alerts
-- **Tech Writer:** Documentação final, runbooks
-
-### User Stories
-Veja `backlog-fase-4.md`
-
-### Entregáveis
-- ✅ Pac-Man game funcional (single + multiplayer)
-- ✅ Menu de seleção de jogo
-- ✅ Leaderboard global (Top 10 all-time)
-- ✅ Persistência de histórico de jogadores
-- ✅ Deploy em produção
-- ✅ Monitoring e alertas configurados
-- ✅ Documentação técnica completa
-
-### Critérios de Saída
-- Plataforma suporta 2 jogos completamente
-- Leaderboard funcional e escalável
-- 99.5% uptime em produção
-- <200ms latência em condições reais (3G/4G simulado)
-- Pronto para 1.000+ usuários/mês
+**Aprovação:** Teste de carga: 50 sessões simultâneas sem erro
 
 ---
 
-## 📊 Dependências Entre Fases
+## 🎯 FASE 3: Tetris Multiplayer Funcional (4 Semanas)
 
-```
-Fase 1 (Tetris SP)
-    ↓ (codigo pronto pra multiplayer)
-Fase 2 (Infra)
-    ↓ (backend + sessões prontos)
-Fase 3 (Tetris MP)
-    ↓ (plataforma base validada)
-Fase 4 (2º Jogo + Leaderboard)
-    ↓
-LAUNCH
-```
+**Objetivo:** Sincronizar Tetris para 4 jogadores, ranking de sessão e persistência.
 
-**Nenhuma fase pode pular** — cada uma prepara infra para a próxima.
+**O que será entregue:**
+- ✅ Tetris com 4 grids simultâneos na TV
+- ✅ Controles no celular latência <200ms
+- ✅ Ranking em tempo real
+- ✅ Game over individual (outros continuam)
+- ✅ Score salvo no banco
+- ✅ Tela de resultados com ranking final
 
----
+**Arquitetura:**
+- Game loop sincronizado (20-30 FPS)
+- Server-side state (source of truth)
+- Event sourcing para sincronização
+- Banco: resultados persistidos
 
-## 🎯 Recursos por Fase
+**User Stories (Backlog Detalhado em backlog-fase-3.md):**
+- US-010: Controles no celular (← → ⟳ ↓)
+- US-011: 4 grids na TV lado a lado
+- US-012: Score sincronizado em tempo real
+- US-013: Ranking durante e após jogo
+- US-014: Game over individual
+- US-015: Voltar ao menu após jogo
+- US-016: Reconectar à sessão se desconectar
 
-| Fase | Front | Back | QA | Designer | DevOps | Duração |
-|------|-------|------|----|---------|---------|---------:|
-| 1 | 1 | — | 0.5 | 0.5 | — | 4 sem |
-| 2 | 1 | 1 | 0.5 | — | 0.5 | 2 sem |
-| 3 | 1 | 1 | 1 | — | 0.5 | 4 sem |
-| 4 | 1 | 1 | 1 | 0.5 | 1 | 4 sem |
-| **TOTAL** | 1 FTE | 1 FTE | 0.75 FTE | 0.5 FTE | 0.5 FTE | **14 sem** |
+**Métricas de Saída:**
+- ✅ Latência input-feedback <200ms em 3G/4G
+- ✅ 4 grids renderizando a 30+ FPS
+- ✅ Sincronização sem glitches (0 dessincronia)
+- ✅ Reconexão em <30s bem-sucedida
+- ✅ Score salvo 100% das vezes (zero perda)
 
----
+**Dependências:** 
+- Fase 1 + Fase 2 completas
+- QA setup (testes de sincronização, latência)
 
-## 🚨 Riscos & Mitigações
-
-| Risco | Impacto | Mitigação |
-|-------|---------|-----------|
-| Latência rede >200ms desincroniza jogo | CRÍTICO | Testes de latência real semana 6; delta compression; server-side validation |
-| Redis/WebSocket cai com 100+ sessões | ALTO | Load testing na fase 2; horizontal scaling configurado |
-| Peças/fantasmas dessincronizados | ALTO | Server é source of truth; client apenas envia input |
-| Bug de score no meio do jogo | ALTO | Testes unitários de score; audit log de todas pontuações |
-| Celular perde conexão mid-game | MÉDIO | Auto-reconnect em 30s; reconectar sem perder progresso |
-| UX confusa no celular | MÉDIO | Testes com usuários na semana 4; prototipagem Luna semana 1 |
-
----
-
-## 📈 Métricas por Fase
-
-### Fase 1
-- ✅ Game loop estável (0 crashes em 1h gameplay)
-- ✅ Score calcula correto (100% acuracy)
-- ✅ FPS >30 em navegador moderno
-
-### Fase 2
-- ✅ Conexão estabelecida <2s
-- ✅ Lista de jogadores sincroniza <500ms
-- ✅ QR code válido 100% das vezes
-
-### Fase 3
-- ✅ Input latência <200ms (p95)
-- ✅ Score sincronizado 100% (audit log)
-- ✅ Zero race conditions em ranking
-
-### Fase 4
-- ✅ Uptime >99.5%
-- ✅ Leaderboard atualiza <5s
-- ✅ Suporta 100+ sessões simultâneas
-- ✅ Deploy 0-downtime possível
+**Aprovação:** Teste com 20 sessões simultâneas, 4 players cada, 30 min de gameplay sem erro
 
 ---
 
-## 🎓 Lições Aprendidas & Loops de Feedback
+## 🎯 FASE 4: 2º Jogo + Polish + Deploy (4 Semanas)
 
-Após cada fase, a equipe faz:
-1. **Sprint Review** com stakeholders
-2. **Retrospectiva** para melhorias de processo
-3. **Testes com usuários** (especialmente fase 1 e 3)
-4. **Análise de métricas** (uptime, latência, usabilidade)
+**Objetivo:** Adicionar Pac-Man, leaderboard global, refinar UX, fazer deploy em produção.
 
-Feedback incorporado na próxima fase.
+**O que será entregue:**
+- ✅ Pac-Man multiplayer funcional
+- ✅ Menu para escolher jogo (Tetris / Pac-Man)
+- ✅ Leaderboard global (Top 10)
+- ✅ Histórico de partidas do jogador
+- ✅ CI/CD pipeline configurado
+- ✅ Deploy em produção (staging + live)
+- ✅ Monitoramento ativo (Sentry, logs)
+
+**Arquitetura:**
+- 2 game loops independentes (Tetris vs Pac-Man)
+- Leaderboard com queries otimizadas
+- CDN para assets (imagens, sons)
+- Monitoramento: Sentry, New Relic ou CloudWatch
+
+**User Stories (Backlog Detalhado em backlog-fase-4.md):**
+- US-017: Menu de escolha de jogo
+- US-018: Pac-Man controles (↑ ↓ ← →)
+- US-019: Histórico de partidas persistido
+- US-020: Leaderboard global acessível
+
+**Métricas de Saída:**
+- ✅ 2 jogos funcionando em paralelo
+- ✅ Leaderboard com >1000 partidas
+- ✅ CI/CD green 100% (main sempre deployável)
+- ✅ Zero downtime deploy
+- ✅ SLA 99.5% uptime comprovado
+
+**Dependências:** 
+- Fases 1-3 completas
+- DevOps setup (CI/CD, infra cloud)
+- QA testes e2e
+
+**Aprovação:** Beta com 100+ usuários reais, taxa de retorno >60%, uptime 99.5% em 1 semana
 
 ---
 
-## ✅ Aprovações
+## 📊 Fases Futuras (Pós-MVP, não priorizado ainda)
 
-| Papel | Nome | Data | OK? |
-|------|------|------|-----|
-| Product Owner | Marina | 2026-10-07 | ✅ Aguardando chefe |
-| Tech Lead | Carlos | — | ⏳ |
-| Scrum Master | Helena | — | ⏳ |
-| Chefe | — | — | ⏳ |
+### Fase 5: Mais Jogos (Semanas 15-18)
+- Space Invaders multiplayer
+- Snake multiplayer
+- Pong multiplayer
+- Cada jogo segue template estabelecido
+
+### Fase 6: Social & Persistência (Semanas 19-22)
+- Perfil do jogador (histórico completo)
+- Convites por link para amigos
+- Chat simples durante jogo
+- Replay/vídeo de partidas
+
+### Fase 7: Monetização (Semanas 23+)
+- Cosmetics (skins, temas, avatares premium)
+- Subscription: premium themes, histórico ilimitado
+- Branded sessions (logo customizado)
+
+---
+
+## 🚨 Marcos Críticos (Go/No-Go)
+
+| Marco | Critério | Quando |
+|-------|----------|--------|
+| **Fase 1 Done** | Tetris funcionando, 0 crashes | Semana 4 |
+| **Fase 2 Done** | QR + 4 players conectam | Semana 6 |
+| **Fase 3 Done** | Multiplayer testado, leaderboard OK | Semana 10 |
+| **MVP Live** | Deploy em produção, SLA 99.5% | Semana 14 |
+| **Beta Success** | 100+ usuários, taxa retorno >60% | Semana 16 |
+
+---
+
+## ⚠️ Riscos & Contingências
+
+| Risco | Impacto | Plano B |
+|-------|--------|---------|
+| Sincronização complexa | Atrasa Fase 3 | Event sourcing; consultar Carlos (Tech Lead) em Semana 7 |
+| Latência >200ms em 3G | Frustração do usuário | Throttling agressivo; testar em rede degradada Semana 5 |
+| Banco não escala para 1000 partidas | Leaderboard lento | Implementar cache Redis, índices no PG |
+| Deploy falha em produção | Downtime | Rollback automático; teste em staging 48h antes |
+
+---
+
+## 📋 Decisões Pendentes
+
+Antes de começar Sprint 1, confirmar com chefe:
+
+1. ✅ **Qual segundo jogo?** → Pac-Man (confirmado)
+2. ✅ **Autenticação?** → Nome simples (confirmado)
+3. ❓ **Cloud provider?** → AWS / Railway / Vercel? (pendente)
+4. ❓ **Monetização MVP?** → Sim ou não? (pendente)
+5. ❓ **Testes com usuários?** → Quando e quantos? (pendente)
+
+---
+
+## 📞 Donos por Fase
+
+| Fase | Tech Lead | Dev Backend | Dev Frontend | Designer | QA |
+|------|-----------|-------------|--------------|----------|-----|
+| 1 | Carlos | Diego | Bianca | Luna | Paula |
+| 2 | Carlos | Diego | Bianca | - | Paula |
+| 3 | Carlos | Diego | Bianca | - | Paula |
+| 4 | Carlos | Diego | Bianca | Luna | Paula |
+
+**DevOps (Bruno):** Ativo a partir de Fase 2  
+**Dados (Thiago):** Ativo em Fase 4 (leaderboard)  
+**Segurança (Vera):** Review em Fase 4 (dados de score)  
+**Tech Writer (Júlia):** Documentação contínua  
 
 ---
 
 **Versão:** 1.0  
-**Última atualização:** 2026-10-07  
-**Proprietário:** Marina (Product Owner)  
-**Próxima revisão:** Após aprovação + Kick-off Fase 1
+**Aprovado:** Chefe  
+**Próxima revisão:** Fim de Fase 1
