@@ -150,7 +150,7 @@ export function Controller({ code }: { code: string }) {
           <PadButton label="A" action="a" send={send} className="round" />
         </div>
       </div>
-      <PadButton label="PAUSA" action="pause" send={send} className="pause" />
+      {room.canPause && <PadButton label="PAUSA" action="pause" send={send} className="pause" />}
     </div>
   );
 }

@@ -247,6 +247,7 @@ export class Room {
       code: this.code,
       phase: this.phase,
       maxPlayers: this.maxPlayers,
+      canPause: false, // Tetris multiplayer não tem pausa (ver input())
       countdown: this.phase === 'countdown' ? Math.ceil(this.countdownTicks / TICKS_PER_SECOND) : null,
       players,
       ranking: this.ranking,

@@ -29,6 +29,8 @@ export interface RoomState {
   code: string;
   phase: Phase;
   maxPlayers: number;
+  /** O jogo atual aceita pausa? Se falso, o controle não exibe o botão. */
+  canPause: boolean;
   countdown: number | null;
   players: PlayerInfo[];
   ranking: RankingEntry[] | null;
