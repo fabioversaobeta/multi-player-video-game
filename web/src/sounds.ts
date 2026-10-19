@@ -10,9 +10,9 @@ function audio(): AudioContext | null {
 }
 
 /** Navegadores só liberam áudio após um gesto do usuário; chame em clique/tecla. */
-export function unlockAudio(): void {
+export async function unlockAudio(): Promise<void> {
   const c = audio();
-  if (c && c.state === 'suspended') void c.resume();
+  if (c && c.state === 'suspended') await c.resume().catch(() => undefined);
 }
 
 export function audioBlocked(): boolean {
@@ -57,4 +57,32 @@ export function playLineClear(count: number): void {
       [C5, E5, G5, C6, E6].forEach((f, i) => tone(c, f, t + i * 0.07, 0.22, 'square', 0.14));
       [C6, E6, G6].forEach((f) => tone(c, f, t + 0.38, 0.6, 'triangle', 0.2));
   }
+}
+
+function ready(): AudioContext | null {
+  const c = audio();
+  return c && c.state === 'running' ? c : null;
+}
+
+/** Bip da contagem regressiva (3, 2, 1). */
+export function playCountdown(): void {
+  const c = ready();
+  if (c) tone(c, 660, c.currentTime + 0.01, 0.25, 'square', 0.18);
+}
+
+/** Bip agudo e mais longo quando a partida começa. */
+export function playGo(): void {
+  const c = ready();
+  if (!c) return;
+  const t = c.currentTime + 0.01;
+  tone(c, 1320, t, 0.5, 'square', 0.18);
+  tone(c, 1760, t, 0.5, 'triangle', 0.15);
+}
+
+/** Fim de partida: notas descendentes. */
+export function playGameOver(): void {
+  const c = ready();
+  if (!c) return;
+  const t = c.currentTime + 0.01;
+  [G5, E5, C5, 392, 261.63].forEach((f, i) => tone(c, f, t + i * 0.22, i === 4 ? 0.8 : 0.28, 'triangle', 0.22));
 }

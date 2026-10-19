@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import type { InputAction, RoomState } from '../../server/src/protocol';
-import { playLineClear, unlockAudio } from './sounds';
+import { playCountdown, playGameOver, playGo, playLineClear, unlockAudio } from './sounds';
 import { connect, type AppSocket } from './socket';
 import { addRecordOnce, getName, getRecords, resetRecords, saveName } from './storage';
 
@@ -55,6 +55,18 @@ export function Controller({ code }: { code: string }) {
     }
   }, [room?.phase, room?.matchId, me?.id]);
 
+  const phase = room?.phase;
+  const countdown = room?.countdown;
+  const prevPhase = useRef<string | null>(null);
+  useEffect(() => {
+    if (phase === 'countdown' && countdown) playCountdown();
+  }, [phase, countdown]);
+  useEffect(() => {
+    if (prevPhase.current === 'countdown' && phase === 'playing') playGo();
+    if (phase === 'results') playGameOver();
+    prevPhase.current = phase ?? null;
+  }, [phase]);
+
   const send = (action: InputAction) => socketRef.current?.emit('player:input', { action });
 
   if (!joined) {
@@ -107,6 +119,12 @@ export function Controller({ code }: { code: string }) {
             {me.ready ? '✔ PRONTO (toque p/ cancelar)' : 'ESTOU PRONTO'}
           </button>
         )}
+        <button
+          className="link"
+          onClick={() => { unlockAudio(); [1, 2, 3, 4].forEach((n, i) => setTimeout(() => playLineClear(n), 200 + i * 900)); }}
+        >
+          🔊 Testar som
+        </button>
         <div className="records">
           <h3>Meus recordes</h3>
           {records.length === 0 && <p className="small">Ainda sem recordes</p>}
