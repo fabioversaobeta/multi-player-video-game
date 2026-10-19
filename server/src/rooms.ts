@@ -44,6 +44,7 @@ export class Room {
   private scoreTicks = 0;
   private scoreSig = "";
   private ranking: RankingEntry[] | null = null;
+  private matchId: string | null = null;
   emptySince: number | null = null;
   stateDirty = true;
   frameDirty = false;
@@ -137,6 +138,7 @@ export class Room {
   private startMatch(): void {
     this.phase = 'playing';
     this.ranking = null;
+    this.matchId = randomBytes(6).toString('hex');
     this.matchPlayers = [...this.players.keys()];
     const base = (Date.now() & 0xffffff) >>> 0;
     this.matchPlayers.forEach((id, i) => {
@@ -249,6 +251,7 @@ export class Room {
       maxPlayers: this.maxPlayers,
       canPause: false, // Tetris multiplayer não tem pausa (ver input())
       countdown: this.phase === 'countdown' ? Math.ceil(this.countdownTicks / TICKS_PER_SECOND) : null,
+      matchId: this.matchId,
       players,
       ranking: this.ranking,
     };

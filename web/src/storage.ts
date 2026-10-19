@@ -25,6 +25,19 @@ export function getRecords(game: string): RecordEntry[] {
   return read<Records>(RECORDS_KEY, {})[game] ?? [];
 }
 
+const SAVED_MATCH_KEY = 'mpvg:lastSavedMatch';
+
+/**
+ * Grava a pontuação de uma partida no máximo uma vez, mesmo após recarregar a página,
+ * reconectar ou abrir duas abas. Persiste o id da última partida gravada.
+ */
+export function addRecordOnce(game: string, matchId: string, player: string, score: number): RecordEntry[] {
+  const key = `${game}:${matchId}:${player}`;
+  if (read<string>(SAVED_MATCH_KEY, '') === key) return getRecords(game);
+  write(SAVED_MATCH_KEY, key); // marca antes de gravar: a 2ª chamada já encontra a marca
+  return addRecord(game, player, score);
+}
+
 /** Insere a pontuação no top 5 do jogo. */
 export function addRecord(game: string, player: string, score: number): RecordEntry[] {
   if (score <= 0) return getRecords(game);
