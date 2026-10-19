@@ -4,7 +4,7 @@ import express from 'express';
 import { Server, type Socket } from 'socket.io';
 import type { ClientToServer, ServerToClient } from './protocol.js';
 import { RoomManager, type Room } from './rooms.js';
-import { TICKS_PER_SECOND } from './tetris.js';
+import { TICKS_PER_SECOND } from './engine.js';
 
 const PORT = Number(process.env.PORT ?? 3001);
 const ORIGIN = process.env.CORS_ORIGIN ?? '*'; // em produção: URL do frontend na Vercel
@@ -67,6 +67,8 @@ io.on('connection', (socket: Socket<ClientToServer, ServerToClient>) => {
 
   socket.on('room:back', () => current?.backToLobby());
 
+  socket.on('room:game', ({ game }) => current?.setGame(game));
+
   socket.on('disconnect', () => current?.disconnectSocket(socket.id));
 });
 
@@ -84,6 +86,7 @@ setInterval(() => {
   acc -= steps * TICK_MS;
   for (const room of manager.rooms.values()) {
     for (let i = 0; i < steps; i++) room.step();
+    for (const ev of room.sfxEvents.splice(0)) io.to(ev.socketId).emit('player:sfx', { kind: ev.kind, value: ev.value });
     if (room.stateDirty) {
       room.stateDirty = false;
       io.to(roomChannel(room)).emit('room:state', room.state());
@@ -92,7 +95,7 @@ setInterval(() => {
       room.frameDirty = false;
       const frame = room.frame();
       const key = JSON.stringify(frame);
-      if (lastFrameKey.get(room.code) !== key) {
+      if (frame && lastFrameKey.get(room.code) !== key) {
         lastFrameKey.set(room.code, key);
         io.to(tvChannel(room)).emit('game:frame', frame);
       }

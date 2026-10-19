@@ -3,6 +3,13 @@
 
 export type InputAction = 'left' | 'right' | 'down' | 'a' | 'b' | 'pause';
 
+export type GameId = 'tetris' | 'snake';
+
+export interface GameOption {
+  id: GameId;
+  name: string;
+}
+
 export type Phase = 'lobby' | 'countdown' | 'playing' | 'results';
 
 export interface PlayerInfo {
@@ -28,6 +35,10 @@ export interface RankingEntry {
 export interface RoomState {
   code: string;
   phase: Phase;
+  /** Jogo escolhido para a próxima (ou atual) partida. */
+  game: GameId;
+  /** Jogos disponíveis para escolher no lobby. */
+  games: GameOption[];
   maxPlayers: number;
   /** O jogo atual aceita pausa? Se falso, o controle não exibe o botão. */
   canPause: boolean;
@@ -48,10 +59,18 @@ export interface BoardFrame {
   over: boolean;
 }
 
-/** Quadro do jogo: enviado apenas à TV. */
-export interface GameFrame {
-  boards: Record<string, BoardFrame>;
+export interface SnakeView {
+  id: string;
+  /** Casas [x, y] ocupadas, cabeça primeiro; vazio se a cobra morreu. */
+  cells: [number, number][];
+  alive: boolean;
+  score: number;
 }
+
+/** Quadro do jogo: enviado apenas à TV. O formato depende do jogo (campo `game`). */
+export type GameFrame =
+  | { game: 'tetris'; boards: Record<string, BoardFrame> }
+  | { game: 'snake'; cols: number; rows: number; foods: [number, number][]; snakes: SnakeView[] };
 
 export interface ClientToServer {
   'tv:create': (ack: (r: { code: string; tvToken: string }) => void) => void;
@@ -66,9 +85,13 @@ export interface ClientToServer {
   'player:ready': (p: { ready: boolean }) => void;
   'player:input': (p: { action: InputAction }) => void;
   'room:back': () => void;
+  /** Escolhe o jogo (só vale no lobby). */
+  'room:game': (p: { game: GameId }) => void;
 }
 
 export interface ServerToClient {
   'room:state': (s: RoomState) => void;
   'game:frame': (f: GameFrame) => void;
+  /** Enviado só ao celular do jogador (para tocar o som): linhas fechadas, comida, batida. */
+  'player:sfx': (p: { kind: 'lines' | 'eat' | 'crash'; value: number }) => void;
 }

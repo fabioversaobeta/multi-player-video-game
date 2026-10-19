@@ -77,3 +77,15 @@ body { overflow: hidden; touch-action: none; user-select: none; }
   .abtns { flex-direction: row-reverse; gap: 14px; align-items: center; }
   .pad-btn.round { width: 72px; height: 72px; }
 }
+
+/* Escolha de jogo */
+.game-picker { display: flex; gap: 10px; justify-content: center; margin: 4px 0 12px; flex-wrap: wrap; }
+.game-opt { background: #23233f; color: var(--fg); border: 2px solid #44446a; border-radius: 12px; padding: 10px 22px; font-size: 1.2rem; font-weight: 800; cursor: pointer; }
+.game-opt.on { background: var(--accent); color: #000; border-color: var(--accent); }
+
+/* Snake */
+.snake-scores { display: flex; gap: 1.5vw; justify-content: center; flex-wrap: wrap; margin-bottom: 10px; }
+.snake-score { display: flex; align-items: center; gap: 10px; border: 3px solid; border-radius: 14px; padding: 6px 16px; background: #14142a; font-size: clamp(1rem, 2vw, 1.8rem); }
+.snake-score.dead { opacity: .45; }
+.snake-wrap { align-self: center; border-radius: 8px; overflow: hidden; }
+.pad-hint { text-align: center; color: var(--muted); font-size: .9rem; }

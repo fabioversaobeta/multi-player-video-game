@@ -5,7 +5,7 @@ Referência: 14 semanas em 4 fases **sequenciais**. Sprints sugeridas (não vali
 | Fase | Foco | Status |
 |---|---|---|
 | 1 | Tetris MVP + lobby | **Em andamento** |
-| 2 | Refatoração do backend para múltiplos jogos | Não iniciada |
+| 2 | Refatoração do backend para múltiplos jogos | **Interface `GameEngine` pronta** (Tetris adaptado; Snake como 2º motor para validar a abstração) |
 | 3 | Validação com 4 jogadores reais | Não iniciada |
 | 4 | Placar de sessão + 2º jogo | Não iniciada |
 
@@ -17,7 +17,7 @@ Já implementado: servidor autoritativo (30 ticks/s), salas, lobby com "pronto" 
 Falta: testes de frontend e E2E, polimento visual (TV e celular), deploy em Railway + Vercel, CI.
 
 ## Fase 2 — Refatoração do backend
-Preparar o backend para **múltiplos jogos** e multiplayer estável com 4 jogadores. **Sem novos jogos**: tudo continua só com Tetris. Extrair a interface de jogo (motor genérico plugável na sala).
+Preparar o backend para **múltiplos jogos** e multiplayer estável com 4 jogadores. Feito: interface de jogo (`GameEngine`) plugável na sala, com Tetris adaptado. O **Snake** foi implementado como segundo motor para validar a abstração (a escolha oficial do 2º jogo, na Fase 4, segue em aberto). Falta: estabilidade com 4 jogadores reais (Fase 3).
 
 ## Fase 3 — Validação com 4 jogadores
 Validação, não desenvolvimento. Plano aprovado: 4 pessoas simulando os 4 jogadores; 3 sessões de 15–20 min (3 partidas de Tetris); medir latência observada (via log), quedas e sincronização; entrega: relatório simples (o que funcionou, o que falhou, sugestões). Correções entram como histórias de ajuste.

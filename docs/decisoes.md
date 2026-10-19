@@ -32,6 +32,15 @@ Fonte de verdade das regras do projeto. Decisões do dono do produto (DP) e esco
 - No fim: **ranking final (1º a 4º) com pontuações** e volta ao lobby.
 - Entrada inválida (mover contra a parede, rotação impossível) é **rejeitada silenciosamente** pelo servidor.
 
+## 4b. Snake (DEV, provisório; 2º jogo ainda a confirmar em reunião)
+- **Arena compartilhada** 32×18, 1 a 4 jogadores (a estrutura aceita 6), cada um com sua cobra.
+- **Controles:** esquerda/direita giram a cobra em relação ao sentido em que ela anda (não há reversão possível). Demais botões são ignorados.
+- **Pontuação:** +10 por comida; há sempre `max(2, jogadores)` comidas na arena. Comer faz a cobra crescer.
+- **Eliminação:** bater na parede ou em qualquer cobra (inclusive a própria); cabeça contra cabeça elimina as duas. Exceção à regra de "sem colisão entre jogadores" (§3), pois a colisão é central no Snake.
+- **Fim:** a partida termina quando todas as cobras morrem; quem morre espera os demais (§3). Ranking por pontos.
+- **Velocidade:** 5 casas/s, acelerando até 10 casas/s a cada 25 s de partida.
+- **Escolha do jogo:** feita no lobby, pela TV ou por qualquer celular; trocar o jogo zera os "prontos".
+
 ## 5. Controles no celular (DP)
 - **Setas** (esquerda, direita, descer rápido), **Pausa**, **Botão A** (confirma) e **Botão B** (volta).
 - Botões grandes, feedback visual ao toque (e vibração quando disponível), modo escuro.
