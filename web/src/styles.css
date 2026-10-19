@@ -66,7 +66,7 @@ body { overflow: hidden; touch-action: none; user-select: none; }
 .pad-grid { align-items: stretch; }
 .dpad { align-items: stretch; }
 .dpad .pad-btn { min-height: 0; height: 100%; max-height: 220px; align-self: end; }
-.abtns { justify-content: flex-end; }
+.abtns { justify-content: flex-start; } /* column-reverse: flex-start = embaixo */
 /* Paisagem (celular deitado): botões compactos, ao alcance dos polegares. */
 @media (orientation: landscape) and (max-height: 500px) {
   .phone.pad { padding: 8px 12px; gap: 6px; }
