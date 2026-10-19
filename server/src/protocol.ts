@@ -71,4 +71,6 @@ export interface ClientToServer {
 export interface ServerToClient {
   'room:state': (s: RoomState) => void;
   'game:frame': (f: GameFrame) => void;
+  /** Enviado só ao celular do jogador que fechou linhas (para tocar o som). */
+  'player:lines': (p: { lines: number }) => void;
 }

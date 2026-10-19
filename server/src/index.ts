@@ -84,6 +84,7 @@ setInterval(() => {
   acc -= steps * TICK_MS;
   for (const room of manager.rooms.values()) {
     for (let i = 0; i < steps; i++) room.step();
+    for (const ev of room.lineEvents.splice(0)) io.to(ev.socketId).emit('player:lines', { lines: ev.lines });
     if (room.stateDirty) {
       room.stateDirty = false;
       io.to(roomChannel(room)).emit('room:state', room.state());
