@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { InputAction, RoomState } from '../../server/src/protocol';
 import { connect, type AppSocket } from './socket';
-import { addRecord, getName, getRecords, resetRecords, saveName } from './storage';
+import { addRecordOnce, getName, getRecords, resetRecords, saveName } from './storage';
 
 const tokenKey = (code: string) => `mpvg:token:${code}`;
 const joinedKey = (code: string) => `mpvg:joined:${code}`;
@@ -16,7 +16,6 @@ export function Controller({ code }: { code: string }) {
   const socketRef = useRef<AppSocket | null>(null);
   const nameRef = useRef(name);
   nameRef.current = name;
-  const savedFor = useRef('');
 
   const join = (s: AppSocket) => {
     let token: string | undefined;
@@ -49,14 +48,10 @@ export function Controller({ code }: { code: string }) {
 
   // grava o recorde local quando a partida termina
   useEffect(() => {
-    if (room?.phase === 'results' && me && room.ranking) {
-      const key = room.code + room.ranking.map((r) => r.score).join(',');
-      if (savedFor.current !== key) {
-        savedFor.current = key;
-        setRecords(addRecord('tetris', me.name, me.score));
-      }
+    if (room?.phase === 'results' && me && room.ranking && room.matchId) {
+      setRecords(addRecordOnce('tetris', room.matchId, me.name, me.score));
     }
-  }, [room?.phase]);
+  }, [room?.phase, room?.matchId, me?.id]);
 
   const send = (action: InputAction) => socketRef.current?.emit('player:input', { action });
 
@@ -150,7 +145,7 @@ export function Controller({ code }: { code: string }) {
           <PadButton label="A" action="a" send={send} className="round" />
         </div>
       </div>
-      <PadButton label="PAUSA" action="pause" send={send} className="pause" />
+      {room.canPause && <PadButton label="PAUSA" action="pause" send={send} className="pause" />}
     </div>
   );
 }

@@ -29,7 +29,11 @@ export interface RoomState {
   code: string;
   phase: Phase;
   maxPlayers: number;
+  /** O jogo atual aceita pausa? Se falso, o controle não exibe o botão. */
+  canPause: boolean;
   countdown: number | null;
+  /** Id único da partida atual (muda a cada partida); permite ao cliente não gravar o mesmo resultado duas vezes. */
+  matchId: string | null;
   players: PlayerInfo[];
   ranking: RankingEntry[] | null;
 }
