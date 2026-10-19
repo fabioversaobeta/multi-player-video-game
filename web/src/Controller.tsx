@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import type { InputAction, RoomState } from '../../server/src/protocol';
+import { playLineClear, unlockAudio } from './sounds';
 import { connect, type AppSocket } from './socket';
 import { addRecordOnce, getName, getRecords, resetRecords, saveName } from './storage';
 
@@ -37,6 +38,7 @@ export function Controller({ code }: { code: string }) {
     const s = connect();
     socketRef.current = s;
     s.on('room:state', setRoom);
+    s.on('player:lines', ({ lines }) => playLineClear(lines));
     // reconexão automática: se já entrou antes nesta sala, volta com o token
     s.on('connect', () => {
       if (nameRef.current && sessionStorage.getItem(joinedKey(code))) join(s);
@@ -63,6 +65,7 @@ export function Controller({ code }: { code: string }) {
         <form
           onSubmit={(e) => {
             e.preventDefault();
+            unlockAudio();
             const n = name.trim() || 'Jogador';
             setName(n);
             nameRef.current = n;
@@ -99,7 +102,7 @@ export function Controller({ code }: { code: string }) {
         ) : (
           <button
             className={'btn big-btn' + (me.ready ? ' on' : '')}
-            onClick={() => socketRef.current?.emit('player:ready', { ready: !me.ready })}
+            onClick={() => { unlockAudio(); socketRef.current?.emit('player:ready', { ready: !me.ready }); }}
           >
             {me.ready ? '✔ PRONTO (toque p/ cancelar)' : 'ESTOU PRONTO'}
           </button>

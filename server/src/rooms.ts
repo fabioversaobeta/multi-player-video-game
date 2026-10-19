@@ -48,6 +48,8 @@ export class Room {
   emptySince: number | null = null;
   stateDirty = true;
   frameDirty = false;
+  /** Linhas fechadas aguardando envio ao celular do jogador (esvaziado pelo loop do servidor). */
+  lineEvents: { socketId: string; lines: number }[] = [];
 
   constructor(code: string, private maxPlayers = MAX_PLAYERS) {
     this.code = code;
@@ -177,7 +179,7 @@ export class Room {
     const before = p.game;
     const after = applyAction(before, action as TetrisAction);
     if (after === before) return log(false, 'movimento inválido');
-    p.game = after;
+    this.setGame(p, after);
     this.frameDirty = true;
     log(true);
   }
@@ -199,13 +201,19 @@ export class Room {
       const p = this.players.get(id)!;
       if (!p.game) continue;
       const wasOver = p.game.over;
-      p.game = tick(p.game);
+      this.setGame(p, tick(p.game));
       if (p.game.over && !wasOver) this.touch();
       if (!p.game.over) allOver = false;
     }
     this.frameDirty = true;
     this.syncScores();
     if (allOver) this.finish();
+  }
+
+  private setGame(p: Player, next: TetrisState): void {
+    const cleared = next.lines - (p.game?.lines ?? 0);
+    if (cleared > 0 && p.socketId) this.lineEvents.push({ socketId: p.socketId, lines: cleared });
+    p.game = next;
   }
 
   /** Placar leve para os celulares: reenvia o estado da sala a cada ~1/3 s, só se algo mudou. */
