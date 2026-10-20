@@ -36,6 +36,7 @@ export interface TetrisState {
   level: number;
   ticks: number;
   gravity: number; // contador de ticks até a próxima queda
+  dropping: boolean; // queda rápida (botão B) em andamento
   over: boolean;
 }
 
@@ -97,6 +98,7 @@ export function createTetris(seed: number): TetrisState {
     level: 1,
     ticks: 0,
     gravity: 0,
+    dropping: false,
     over: false,
   };
 }
@@ -106,6 +108,8 @@ export function dropInterval(level: number): number {
   return Math.max(2, Math.floor(24 * Math.pow(0.9, level - 1)));
 }
 
+/** Linhas por tick na queda rápida: rápido, mas ainda visível (~0,3 s para cruzar o tabuleiro). */
+const HARD_DROP_ROWS_PER_TICK = 2;
 const LINE_POINTS = [0, 100, 300, 500, 800];
 const PIECE_POINTS = 10;
 const SECONDS_PER_LEVEL = 90;
@@ -151,6 +155,7 @@ function lockPiece(s: TetrisState): TetrisState {
     score,
     level: computeLevel(lines, s.ticks),
     gravity: 0,
+    dropping: false,
     over,
   };
 }
@@ -171,7 +176,7 @@ const KICKS = [0, -1, 1, -2, 2];
 
 /** Aplica um comando do jogador. Comandos inválidos devolvem o MESMO estado (rejeição silenciosa). */
 export function applyAction(s: TetrisState, action: TetrisAction): TetrisState {
-  if (s.over || !s.piece) return s;
+  if (s.over || !s.piece || s.dropping) return s;
   const p = s.piece;
   switch (action) {
     case 'left':
@@ -184,16 +189,17 @@ export function applyAction(s: TetrisState, action: TetrisAction): TetrisState {
       if (collides(s.board, moved)) return lockPiece(s);
       return { ...s, piece: moved, score: s.score + 1, gravity: 0 };
     }
-    case 'a':
-    case 'b': {
+    case 'a': {
       if (p.type === 2) return s; // O não precisa girar
-      const matrix = rotateMatrix(p.matrix, action === 'a');
+      const matrix = rotateMatrix(p.matrix, true);
       for (const k of KICKS) {
         const rotated = { ...p, matrix, x: p.x + k };
         if (!collides(s.board, rotated)) return { ...s, piece: rotated };
       }
       return s;
     }
+    case 'b':
+      return { ...s, dropping: true }; // a peça cai nos próximos ticks, à vista de todos
   }
 }
 
@@ -202,6 +208,17 @@ export function tick(s: TetrisState): TetrisState {
   if (s.over || !s.piece) return s;
   const ticks = s.ticks + 1;
   const level = computeLevel(s.lines, ticks);
+  if (s.dropping) {
+    let piece = s.piece;
+    let score = s.score;
+    for (let i = 0; i < HARD_DROP_ROWS_PER_TICK; i++) {
+      const moved = { ...piece, y: piece.y + 1 };
+      if (collides(s.board, moved)) return lockPiece({ ...s, ticks, level, piece, score, gravity: 0 });
+      piece = moved;
+      score += 2;
+    }
+    return { ...s, ticks, level, piece, score };
+  }
   const gravity = s.gravity + 1;
   const base = { ...s, ticks, level };
   if (gravity < dropInterval(level)) return { ...base, gravity };

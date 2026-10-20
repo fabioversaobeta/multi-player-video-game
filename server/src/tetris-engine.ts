@@ -54,7 +54,9 @@ export class TetrisEngine implements GameEngine {
   }
 
   private set(playerId: string, next: TetrisState): void {
-    const cleared = next.lines - (this.games.get(playerId)?.lines ?? 0);
+    const prev = this.games.get(playerId);
+    const cleared = next.lines - (prev?.lines ?? 0);
+    if (prev?.dropping && !next.dropping) this.events.push({ playerId, kind: 'drop', value: 1 });
     if (cleared > 0) this.events.push({ playerId, kind: 'lines', value: cleared });
     this.games.set(playerId, next);
   }

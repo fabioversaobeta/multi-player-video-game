@@ -94,5 +94,5 @@ export interface ServerToClient {
   'room:state': (s: RoomState) => void;
   'game:frame': (f: GameFrame) => void;
   /** Enviado só ao celular do jogador (para tocar o som): linhas fechadas, comida, batida. */
-  'player:sfx': (p: { kind: 'lines' | 'eat' | 'crash'; value: number }) => void;
+  'player:sfx': (p: { kind: 'lines' | 'eat' | 'crash' | 'drop'; value: number }) => void;
 }
