@@ -103,16 +103,16 @@ export function createTetris(seed: number): TetrisState {
 
 /** Quantos ticks a peça leva para cair uma linha. Acelera com linhas e com o tempo. */
 export function dropInterval(level: number): number {
-  return Math.max(2, Math.floor(24 * Math.pow(0.85, level - 1)));
+  return Math.max(2, Math.floor(24 * Math.pow(0.9, level - 1)));
 }
 
 const LINE_POINTS = [0, 100, 300, 500, 800];
 const PIECE_POINTS = 10;
-const SECONDS_PER_LEVEL = 30;
+const SECONDS_PER_LEVEL = 90;
 const MAX_LEVEL = 15;
 
 function computeLevel(lines: number, ticks: number): number {
-  const byLines = Math.floor(lines / 10);
+  const byLines = Math.floor(lines / 15);
   const byTime = Math.floor(ticks / (TICKS_PER_SECOND * SECONDS_PER_LEVEL));
   return Math.min(MAX_LEVEL, 1 + byLines + byTime);
 }
