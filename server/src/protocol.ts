@@ -3,7 +3,7 @@
 
 export type InputAction = 'left' | 'right' | 'down' | 'a' | 'b' | 'pause';
 
-export type GameId = 'tetris' | 'snake';
+export type GameId = 'tetris' | 'snake' | 'pong';
 
 export interface GameOption {
   id: GameId;
@@ -71,7 +71,16 @@ export interface SnakeView {
 /** Quadro do jogo: enviado apenas à TV. O formato depende do jogo (campo `game`). */
 export type GameFrame =
   | { game: 'tetris'; boards: Record<string, BoardFrame> }
-  | { game: 'snake'; cols: number; rows: number; foods: [number, number][]; snakes: SnakeView[] };
+  | { game: 'snake'; cols: number; rows: number; foods: [number, number][]; snakes: SnakeView[] }
+  | {
+      game: 'pong';
+      w: number;
+      h: number;
+      paddleH: number;
+      ball: { x: number; y: number };
+      /** Esquerda e direita; `id` nulo = raquete controlada pelo servidor (CPU). */
+      paddles: { id: string | null; x: number; y: number; score: number }[];
+    };
 
 export interface ClientToServer {
   'tv:create': (ack: (r: { code: string; tvToken: string }) => void) => void;
