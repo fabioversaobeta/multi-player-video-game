@@ -67,6 +67,9 @@ body { overflow: hidden; touch-action: none; user-select: none; }
 .dpad { align-items: stretch; }
 .dpad .pad-btn { min-height: 0; height: 100%; max-height: 220px; align-self: end; }
 .abtns { justify-content: flex-start; } /* column-reverse: flex-start = embaixo */
+/* Snake: um botão em cada canto, um polegar para cada lado. */
+.dpad.split { display: flex; justify-content: space-between; max-width: none; width: 100%; }
+.dpad.split .pad-btn { flex: 0 0 38%; }
 /* Paisagem (celular deitado): botões compactos, ao alcance dos polegares. */
 @media (orientation: landscape) and (max-height: 500px) {
   .phone.pad { padding: 8px 12px; gap: 6px; }
@@ -74,6 +77,8 @@ body { overflow: hidden; touch-action: none; user-select: none; }
   .pad-grid { align-items: center; }
   .dpad { flex: 0 0 auto; width: 240px; max-width: none; gap: 6px; }
   .dpad .pad-btn, .pad-btn { min-height: 0; height: 64px; max-height: none; align-self: auto; font-size: 1.5rem; }
+  .dpad.split { width: 100%; }
+  .dpad.split .pad-btn { height: 96px; }
   .abtns { flex-direction: row-reverse; gap: 14px; align-items: center; }
   .pad-btn.round { width: 72px; height: 72px; }
 }
