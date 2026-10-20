@@ -47,7 +47,7 @@ export class SnakeEngine implements GameEngine {
       rows: SNAKE_ROWS,
       foods: this.state.foods.map(([x, y]) => [x, y]),
       snakes: this.state.snakes.map((s) => ({
-        id: s.id, cells: s.body.map(([x, y]) => [x, y]), alive: s.alive, score: s.score,
+        id: s.id, cells: s.body.map(([x, y]) => [x, y]), alive: s.alive, lives: s.lives, score: s.score,
       })),
     };
   }

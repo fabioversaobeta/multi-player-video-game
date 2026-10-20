@@ -1,11 +1,13 @@
 // Regras do Snake multiplayer: uma arena compartilhada. Estado mutável, atualizado por tick.
-// Exceção às regras gerais (decisoes.md §3): aqui há colisão entre jogadores (bater em outra cobra elimina).
+// Exceção às regras gerais (decisoes.md §3): aqui há colisão entre jogadores (bater em outra cobra custa uma vida).
+// O tabuleiro é toroidal: sair por um lado faz a cobra reaparecer no lado oposto.
 import { TICKS_PER_SECOND } from './engine.js';
 import { nextRandom } from './rng.js';
 
 export const SNAKE_COLS = 32;
 export const SNAKE_ROWS = 18;
 export const FOOD_POINTS = 10;
+export const START_LIVES = 3;
 const START_LENGTH = 3;
 
 export type Point = [number, number]; // [x, y]
@@ -18,7 +20,8 @@ export interface Snake {
   body: Point[]; // cabeça primeiro; vazio quando morta
   dir: number;
   queue: Turn[]; // curvas pedidas e ainda não aplicadas (máx. 2)
-  alive: boolean;
+  alive: boolean; // false só quando as vidas acabam
+  lives: number;
   score: number;
 }
 
@@ -53,7 +56,7 @@ export function createSnake(ids: string[], seed: number): SnakeState {
     const sp = SPAWNS[i % SPAWNS.length];
     const [dx, dy] = DIRS[sp.dir];
     const body: Point[] = Array.from({ length: START_LENGTH }, (_, k) => [sp.x - dx * k, sp.y - dy * k]);
-    return { id, body, dir: sp.dir, queue: [], alive: true, score: 0 };
+    return { id, body, dir: sp.dir, queue: [], alive: true, lives: START_LIVES, score: 0 };
   });
   const s: SnakeState = {
     snakes, foods: [], rng: seed >>> 0, ticks: 0, moveCounter: 0, eaten: [], crashed: [],
@@ -100,7 +103,7 @@ export function stepSnake(s: SnakeState): void {
   const heads = new Map<Snake, Point>();
   for (const sn of alive) {
     const [dx, dy] = DIRS[sn.dir];
-    heads.set(sn, [sn.body[0][0] + dx, sn.body[0][1] + dy]);
+    heads.set(sn, [wrap(sn.body[0][0] + dx, SNAKE_COLS), wrap(sn.body[0][1] + dy, SNAKE_ROWS)]);
   }
   const foodAt = (p: Point) => s.foods.findIndex((f) => f[0] === p[0] && f[1] === p[1]);
 
@@ -114,16 +117,18 @@ export function stepSnake(s: SnakeState): void {
   const dead = new Set<Snake>();
   for (const sn of alive) {
     const [x, y] = heads.get(sn)!;
-    const hitsWall = x < 0 || x >= SNAKE_COLS || y < 0 || y >= SNAKE_ROWS;
-    const hitsBody = !hitsWall && occupied.has(y * SNAKE_COLS + x);
+    const hitsBody = occupied.has(y * SNAKE_COLS + x);
     const headOn = alive.some((o) => o !== sn && heads.get(o)![0] === x && heads.get(o)![1] === y);
-    if (hitsWall || hitsBody || headOn) dead.add(sn);
+    if (hitsBody || headOn) dead.add(sn);
   }
   for (const sn of dead) {
-    sn.alive = false;
-    sn.body = [];
+    sn.lives--;
     sn.queue = [];
     s.crashed.push(sn.id);
+    if (sn.lives <= 0) {
+      sn.alive = false;
+      sn.body = [];
+    }
   }
   for (const sn of alive) {
     if (dead.has(sn)) continue;
@@ -138,7 +143,41 @@ export function stepSnake(s: SnakeState): void {
       sn.body.pop();
     }
   }
+  // Quem ainda tem vidas renasce (depois do movimento, para ver o tabuleiro já atualizado).
+  for (const sn of dead) if (sn.alive) respawn(s, sn);
   refillFood(s);
+}
+
+function wrap(v: number, max: number): number {
+  return ((v % max) + max) % max;
+}
+
+/** Recoloca a cobra com o comprimento inicial numa faixa livre; se não houver espaço, ela cai. */
+function respawn(s: SnakeState, sn: Snake): void {
+  const total = SNAKE_COLS * SNAKE_ROWS;
+  const taken = new Set<number>();
+  for (const o of s.snakes) if (o !== sn) for (const [x, y] of o.body) taken.add(y * SNAKE_COLS + x);
+  let r: number;
+  [r, s.rng] = nextRandom(s.rng);
+  const start = Math.floor(r * total);
+  [r, s.rng] = nextRandom(s.rng);
+  const dir = Math.floor(r * 4);
+  const [dx, dy] = DIRS[dir];
+  for (let n = 0; n < total; n++) {
+    const idx = (start + n) % total;
+    const hx = idx % SNAKE_COLS;
+    const hy = Math.floor(idx / SNAKE_COLS);
+    const body: Point[] = Array.from({ length: START_LENGTH }, (_, k) => [wrap(hx - dx * k, SNAKE_COLS), wrap(hy - dy * k, SNAKE_ROWS)]);
+    // exige também 2 casas livres à frente, para não nascer encurralada
+    const ahead: Point[] = [1, 2].map((k) => [wrap(hx + dx * k, SNAKE_COLS), wrap(hy + dy * k, SNAKE_ROWS)]);
+    if ([...body, ...ahead].every(([x, y]) => !taken.has(y * SNAKE_COLS + x))) {
+      sn.body = body;
+      sn.dir = dir;
+      return;
+    }
+  }
+  sn.alive = false;
+  sn.body = [];
 }
 
 export function allDead(s: SnakeState): boolean {

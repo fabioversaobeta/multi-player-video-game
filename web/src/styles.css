@@ -86,6 +86,7 @@ body { overflow: hidden; touch-action: none; user-select: none; }
 /* Snake */
 .snake-scores { display: flex; gap: 1.5vw; justify-content: center; flex-wrap: wrap; margin-bottom: 10px; }
 .snake-score { display: flex; align-items: center; gap: 10px; border: 3px solid; border-radius: 14px; padding: 6px 16px; background: #14142a; font-size: clamp(1rem, 2vw, 1.8rem); }
+.snake-score .lives { color: #ff3b6b; letter-spacing: 2px; }
 .snake-score.dead { opacity: .45; }
-.snake-wrap { align-self: center; border-radius: 8px; overflow: hidden; }
+.snake-wrap { align-self: center; border-radius: 8px; overflow: hidden; box-shadow: 0 0 24px rgba(0,229,255,.4); }
 .pad-hint { text-align: center; color: var(--muted); font-size: .9rem; }
