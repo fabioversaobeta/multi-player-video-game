@@ -72,6 +72,13 @@ Fonte de verdade das regras do projeto. Decisões do dono do produto (DP) e esco
 - **Pontos:** 10 por bloco, 200 por jogador eliminado (não vale a própria bomba), 500 ao último de pé.
 - **Fim:** resta 1 jogador, ou 2min30 (sem bônus de vitória). Solo: termina ao morrer ou ao destruir todos os blocos. Ranking pelos pontos. Sem pausa.
 
+## 4g. Top Gear simplificado (DEV, provisório)
+- **Corrida** numa pista de 3000 unidades com curvas e carros parados, gerados pela semente da partida (mesma pista para todos). Cada piloto vê a sua própria visão em pseudo-3D na TV (uma coluna por jogador); o servidor decide tudo. Carros dos jogadores não colidem entre si.
+- **Controles:** ◀ ▶ mudam de lado (segurar repete) e **NITRO** (B): 3 turbos por corrida, ~2 s cada. O carro acelera sozinho até 200 km/h (turbo 320).
+- **Curvas empurram** o carro para fora; sair da pista (acostamento) limita a velocidade. Bater num carro corta a velocidade para 40% (com ~1 s de invulnerabilidade).
+- **Pontos:** até 300 pelo trecho percorrido + bônus de chegada (1º 1000, 2º 700, 3º 500, 4º 300).
+- **Fim:** todos cruzam a linha, 20 s depois do primeiro a chegar (multi) ou 2 min. Solo: termina ao chegar. Ranking pelos pontos. Sem pausa.
+
 ## 5. Controles no celular (DP)
 - **Setas** (esquerda, direita, descer rápido), **Pausa**, **Botão A** (confirma) e **Botão B** (volta).
 - Botões grandes, feedback visual ao toque (e vibração quando disponível), modo escuro.
