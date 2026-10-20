@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { InputAction, RoomState } from '../../server/src/protocol';
 import {
-  playCountdown, playCrash, playEat, playGameOver, playGo, playLineClear, unlockAudio,
+  playCountdown, playCrash, playDrop, playEat, playGameOver, playGo, playLineClear, unlockAudio,
 } from './sounds';
 import { connect, type AppSocket } from './socket';
 import { addRecordOnce, getName, getRecords, resetRecords, saveName } from './storage';
@@ -45,6 +45,7 @@ export function Controller({ code }: { code: string }) {
     s.on('player:sfx', ({ kind, value }) => {
       if (kind === 'lines') playLineClear(value);
       else if (kind === 'eat') playEat();
+      else if (kind === 'drop') playDrop();
       else playCrash();
     });
     // reconexão automática: se já entrou antes nesta sala, volta com o token

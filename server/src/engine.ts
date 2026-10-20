@@ -5,7 +5,7 @@ import type { GameFrame, InputAction } from './protocol.js';
 export const TICKS_PER_SECOND = 30;
 
 /** Evento sonoro enviado só ao celular do jogador (ex.: linhas fechadas, comida, batida). */
-export type SfxKind = 'lines' | 'eat' | 'crash';
+export type SfxKind = 'lines' | 'eat' | 'crash' | 'drop';
 
 export interface EngineEvent {
   playerId: string;

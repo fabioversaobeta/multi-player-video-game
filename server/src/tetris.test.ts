@@ -97,4 +97,24 @@ describe('tetris', () => {
     const r = applyAction(s, 'a');
     expect(flatten(r).filter((v) => v !== 0)).toHaveLength(4);
   });
+
+  it('B faz a peça cair visivelmente (em vários ticks) e travar no fundo', () => {
+    let s = applyAction(fresh(), 'b');
+    expect(s.dropping).toBe(true);
+    const y0 = s.piece!.y;
+    s = tick(s);
+    expect(s.piece!.y).toBeGreaterThan(y0); // ainda no ar, já desceu
+    expect(s.board.flat().every((v) => v === 0)).toBe(true);
+    const score0 = s.score;
+    for (let i = 0; i < 30 && s.dropping; i++) s = tick(s);
+    expect(s.dropping).toBe(false);
+    expect(s.board[ROWS - 1].some((v) => v !== 0)).toBe(true);
+    expect(s.score).toBeGreaterThan(score0);
+  });
+
+  it('durante a queda rápida os outros comandos são ignorados', () => {
+    const s = applyAction(fresh(), 'b');
+    expect(applyAction(s, 'left')).toBe(s);
+    expect(applyAction(s, 'a')).toBe(s);
+  });
 });

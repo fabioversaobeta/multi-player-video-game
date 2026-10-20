@@ -101,3 +101,12 @@ export function playCrash(): void {
   tone(c, 220, t, 0.15, 'sawtooth', 0.2);
   tone(c, 140, t + 0.12, 0.3, 'sawtooth', 0.2);
 }
+
+/** Peça pousou após a queda rápida: pancada grave e seca. */
+export function playDrop(): void {
+  const c = ready();
+  if (!c) return;
+  const t = c.currentTime + 0.01;
+  tone(c, 130, t, 0.12, 'square', 0.25);
+  tone(c, 70, t + 0.02, 0.18, 'triangle', 0.3);
+}

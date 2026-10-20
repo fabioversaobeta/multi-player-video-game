@@ -64,7 +64,7 @@ Pontos que estavam em aberto e foram decididos para destravar a Fase 1:
 | Tema | Escolha |
 |---|---|
 | Pontuação do Tetris | +10 por peça travada, +1 por célula em "descer"; linhas: 100 / 300 / 500 / 800 (1–4) |
-| Botões | A = girar horário; B = girar anti-horário; nos menus, A confirma (ex.: voltar à sala) |
+| Botões | A = girar a peça; B = queda instantânea (Tetris); nos menus, A confirma (ex.: voltar à sala) |
 | Pausa | Ignorada no multiplayer (nada pausa); registrada na auditoria |
 | Feedback de input inválido | Nenhum (rejeição silenciosa); só aparece no log de auditoria |
 | Estado do backend | Só memória; sala some 30 s após ficar sem TV e sem jogadores |
