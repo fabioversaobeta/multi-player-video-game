@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { Room, RoomManager, sanitizeName } from './rooms.js';
+import { Room, RoomManager, sanitizeName } from './index.js';
 
 function playersOf(room: Room) {
   return [...room.players.values()];

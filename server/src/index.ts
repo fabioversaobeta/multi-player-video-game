@@ -3,7 +3,7 @@ import cors from 'cors';
 import express from 'express';
 import { Server, type Socket } from 'socket.io';
 import type { ClientToServer, ServerToClient } from '@mpvg/shared';
-import { RoomManager, type Room } from './rooms/rooms.js';
+import { RoomManager, type Room } from './rooms/index.js';
 import { TICKS_PER_SECOND } from './core/engine.js';
 
 const PORT = Number(process.env.PORT ?? 3001);

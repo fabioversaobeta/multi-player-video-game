@@ -27,13 +27,15 @@ Node.js + Express + Socket.io (TypeScript) no backend; Vite + React + TypeScript
 | `server/src/games/topgear/` | `rules.ts` (regras puras do Top Gear simplificado: corrida com curvas, carros parados e turbo), `engine.ts` (adaptador `GameEngine`) e testes |
 | `server/src/games/doodle/` | `rules.ts` (regras puras do Doodle Jump simplificado: subida por plataformas, uma visão por jogador), `engine.ts` (adaptador `GameEngine`) e testes |
 | `server/src/games/asteroids/` | `rules.ts` (regras puras do Asteroids simplificado: arena única, todos contra todos), `engine.ts` (adaptador `GameEngine`) e testes |
-| `server/src/rooms/rooms.ts` | `Room` (lobby, contagem, partida, ranking, auditoria) e `RoomManager` (códigos únicos, limpeza) |
+| `server/src/rooms/` | `room.ts` (`Room`: lobby, contagem, partida, ranking, auditoria), `room-manager.ts` (`RoomManager`: códigos únicos, limpeza) e `index.ts` |
 | `shared/src/protocol.ts` | Tipos das mensagens WebSocket, pacote `@mpvg/shared` importado por servidor e web |
 | `server/src/index.ts` | Servidor HTTP/Socket.io e loop de 30 ticks |
-| `web/src/screens/Tv.tsx` | Tela da TV: QR, lobby, tabuleiros, ranking |
-| `web/src/screens/Controller.tsx` | Tela do celular: entrada, "pronto", controles, resultado, recordes |
+| `web/src/screens/Tv.tsx`, `screens/tv/` | Tela da TV: `Tv.tsx` escolhe a fase; `Lobby`, `Results` e o hook `useTvRoom` (conexão e estado) ficam em `tv/` |
+| `web/src/screens/Controller.tsx`, `screens/controller/` | Tela do celular: `Controller.tsx` escolhe a fase; `JoinForm`, `LobbyPhone`, `GamePad` (botões por jogo), `ResultsPhone` e o hook `useController` ficam em `controller/` |
+| `web/src/games/` | `TvView.tsx` escolhe a visão de TV pelo jogo do quadro; `<jogo>/` tem o canvas e a visão de TV (`<Jogo>Tv.tsx`, com placar e layout) de cada jogo; `types.ts` define `TvViewProps` |
 | `web/src/games/<jogo>/` | Componente de desenho em canvas de cada jogo (`Board`, `SnakeArena`, `PongCourt`, `InvadersField`, `PacmanMaze`, `BombermanArena`, `TopGearRoad`, `DoodleTower`, `AsteroidsField`) |
-| `web/src/lib/` | `socket.ts` (cliente Socket.io), `sounds.ts` (efeitos sonoros), `storage.ts` (localStorage: nome, top 5 de recordes) |
+| `web/src/components/` | `ScoreBar.tsx`: placar compartilhado pelas visões de TV (`PlayerScore`, `StatScore`) |
+| `web/src/lib/` | `socket.ts` (cliente Socket.io), `sounds.ts` (efeitos sonoros), `storage.ts` (localStorage: nome, top 5 de recordes), `useViewport.ts` |
 
 ## Fluxo
 1. A TV abre `/`, cria a sala e exibe o QR para `/j/CODIGO`.
