@@ -1,6 +1,6 @@
 // Adaptador do Snake para a interface GameEngine: todos jogam na mesma arena.
 import type { EngineEvent, GameEngine } from '../../core/engine.js';
-import type { GameFrame, InputAction } from '../../protocol.js';
+import type { GameFrame, InputAction } from '@mpvg/shared';
 import {
   SNAKE_COLS, SNAKE_ROWS, allDead, createSnake, stepSnake, turn, type SnakeState,
 } from './rules.js';

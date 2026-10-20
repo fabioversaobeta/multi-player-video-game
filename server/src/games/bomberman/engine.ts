@@ -1,7 +1,7 @@
 // Adaptador do Bomberman para a interface GameEngine.
 import { BOMB_COLS, BOMB_ROWS, MATCH_TICKS, bombermanOver, createBomberman, move, plantBomb, stepBomberman, type BombermanState } from './rules.js';
 import { TICKS_PER_SECOND, type EngineEvent, type GameEngine } from '../../core/engine.js';
-import type { GameFrame, InputAction } from '../../protocol.js';
+import type { GameFrame, InputAction } from '@mpvg/shared';
 
 const ACTION_DIR: Partial<Record<InputAction, number>> = { up: 0, right: 1, down: 2, left: 3 };
 

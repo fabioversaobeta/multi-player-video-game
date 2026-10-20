@@ -1,6 +1,6 @@
 import { QRCodeSVG } from 'qrcode.react';
 import { useEffect, useState } from 'react';
-import type { GameFrame, RoomState } from '../../../server/src/protocol';
+import type { GameFrame, RoomState } from '@mpvg/shared';
 import { AsteroidsField } from '../games/asteroids/AsteroidsField';
 import { Board, PIECE_COLORS } from '../games/tetris/Board';
 import { BombermanArena } from '../games/bomberman/BombermanArena';

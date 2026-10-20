@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import type { BoardFrame } from '../../../../server/src/protocol';
+import type { BoardFrame } from '@mpvg/shared';
 
 const COLS = 10;
 const ROWS = 20;

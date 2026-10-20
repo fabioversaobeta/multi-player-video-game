@@ -2,7 +2,7 @@ import { createServer } from 'node:http';
 import cors from 'cors';
 import express from 'express';
 import { Server, type Socket } from 'socket.io';
-import type { ClientToServer, ServerToClient } from './protocol.js';
+import type { ClientToServer, ServerToClient } from '@mpvg/shared';
 import { RoomManager, type Room } from './rooms/rooms.js';
 import { TICKS_PER_SECOND } from './core/engine.js';
 

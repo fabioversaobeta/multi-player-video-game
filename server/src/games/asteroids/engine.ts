@@ -3,7 +3,7 @@ import {
   HEIGHT, MATCH_TICKS, ROCK_R, SHIP_R, WIDTH, asteroidsOver, createAsteroids, fire, stepAsteroids, thrust, turn, type AsteroidsState,
 } from './rules.js';
 import { TICKS_PER_SECOND, type EngineEvent, type GameEngine } from '../../core/engine.js';
-import type { GameFrame, InputAction } from '../../protocol.js';
+import type { GameFrame, InputAction } from '@mpvg/shared';
 
 const r1 = (v: number) => Math.round(v * 10) / 10;
 

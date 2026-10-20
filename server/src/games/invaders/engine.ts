@@ -4,7 +4,7 @@ import {
   ALIEN_H, ALIEN_W, INV_H_FIELD, INV_W_FIELD, SHIP_H, SHIP_W, SHIP_Y, alienPos, createInvaders, fire, invadersOver,
   moveShip, stepInvaders, type InvadersState,
 } from './rules.js';
-import type { GameFrame, InputAction } from '../../protocol.js';
+import type { GameFrame, InputAction } from '@mpvg/shared';
 
 export class InvadersEngine implements GameEngine {
   readonly canPause = false;

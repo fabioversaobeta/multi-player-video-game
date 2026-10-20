@@ -1,6 +1,6 @@
 // Adaptador do Top Gear para a interface GameEngine.
 import { TICKS_PER_SECOND, type EngineEvent, type GameEngine } from '../../core/engine.js';
-import type { GameFrame, InputAction } from '../../protocol.js';
+import type { GameFrame, InputAction } from '@mpvg/shared';
 import {
   MATCH_TICKS, SEG_LEN, TRACK_LEN, createTopGear, racerScore, steer, stepTopGear, topGearOver, useNitro, type TopGearState,
 } from './rules.js';

@@ -1,6 +1,6 @@
 // Registro dos jogos disponíveis. Para adicionar um jogo: implementar GameEngine e registrar aqui.
 import type { GameEngine } from '../core/engine.js';
-import type { GameId, GameOption } from '../protocol.js';
+import type { GameId, GameOption } from '@mpvg/shared';
 import { AsteroidsEngine } from './asteroids/engine.js';
 import { BombermanEngine } from './bomberman/engine.js';
 import { DoodleEngine } from './doodle/engine.js';

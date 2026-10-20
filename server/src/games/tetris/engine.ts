@@ -1,6 +1,6 @@
 // Adaptador do Tetris para a interface GameEngine: um tabuleiro independente por jogador.
 import type { EngineEvent, GameEngine } from '../../core/engine.js';
-import type { BoardFrame, GameFrame, InputAction } from '../../protocol.js';
+import type { BoardFrame, GameFrame, InputAction } from '@mpvg/shared';
 import { applyAction, createTetris, flatten, tick, type TetrisAction, type TetrisState } from './rules.js';
 
 export class TetrisEngine implements GameEngine {
