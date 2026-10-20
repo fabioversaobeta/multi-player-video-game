@@ -206,7 +206,19 @@ export function Controller({ code }: { code: string }) {
       {game === 'bomberman' && <div className="pad-hint">Ande pela arena · BOMBA explode em 3 s · último de pé vence</div>}
       {game === 'topgear' && <div className="pad-hint">◀ ▶ mudam de lado (as curvas empurram!) · NITRO: 3 turbos · desvie dos carros</div>}
       {game === 'doodle' && <div className="pad-hint">◀ ▶ movem o personagem (ele pula sozinho) · suba o mais alto que puder · não caia!</div>}
-      {game === 'topgear' ? (
+      {game === 'asteroids' && <div className="pad-hint">◀ ▶ giram a nave · PROPULSOR acelera · FOGO atira · acerte rochas e rivais (3 vidas)</div>}
+      {game === 'asteroids' ? (
+        <div className="pad-grid">
+          <div className="dpad split three">
+            <PadButton label="◀" action="left" repeat send={send} />
+            <PadButton label="PROPULSOR" action="up" repeat send={send} className="round" />
+            <PadButton label="▶" action="right" repeat send={send} />
+          </div>
+          <div className="abtns">
+            <PadButton label="FOGO" action="a" repeat send={send} className="round" />
+          </div>
+        </div>
+      ) : game === 'topgear' ? (
         <div className="pad-grid">
           <div className="dpad split three">
             <PadButton label="◀" action="left" repeat send={send} />
