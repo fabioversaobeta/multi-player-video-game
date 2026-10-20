@@ -202,6 +202,17 @@ export function Controller({ code }: { code: string }) {
       {game === 'snake' && <div className="pad-hint">Esquerda/direita giram a cobra</div>}
       {game === 'pong' && <div className="pad-hint">Segure ▲ ▼ para mover a raquete · vence quem fizer 7 pontos</div>}
       {game === 'invaders' && <div className="pad-hint">◀ ▶ movem a nave · FOGO atira (um tiro por vez)</div>}
+      {game === 'pacman' && <div className="pad-hint">Toque numa direção: o Pac-Man segue até bater · coma tudo e fuja dos fantasmas</div>}
+      {game === 'pacman' ? (
+        <div className="pad-grid">
+          <div className="dpad cross">
+            <PadButton label="▲" action="up" send={send} className="up" />
+            <PadButton label="◀" action="left" send={send} className="left" />
+            <PadButton label="▶" action="right" send={send} className="right" />
+            <PadButton label="▼" action="down" send={send} className="down-btn" />
+          </div>
+        </div>
+      ) : (
       <div className="pad-grid">
         <div className={game === 'tetris' ? 'dpad' : game === 'invaders' ? 'dpad split three' : 'dpad split'}>
           <PadButton label={game === 'pong' ? '▲' : '◀'} action="left" repeat={game !== 'snake'} send={send} />
@@ -216,6 +227,7 @@ export function Controller({ code }: { code: string }) {
           </div>
         )}
       </div>
+      )}
       {room.canPause && <PadButton label="PAUSA" action="pause" send={send} className="pause" />}
     </div>
   );

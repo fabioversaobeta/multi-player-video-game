@@ -21,12 +21,13 @@ Node.js + Express + Socket.io (TypeScript) no backend; Vite + React + TypeScript
 | `server/src/snake.ts`, `snake-engine.ts` | Regras do Snake (arena compartilhada) e seu adaptador `GameEngine` |
 | `server/src/pong.ts`, `pong-engine.ts` | Regras do Pong (duelo de raquetes, CPU quando há 1 jogador) e seu adaptador `GameEngine` |
 | `server/src/invaders.ts`, `invaders-engine.ts` | Regras do Space Invaders (arena cooperativa, uma nave por jogador) e seu adaptador `GameEngine` |
+| `server/src/pacman.ts`, `pacman-engine.ts` | Regras do Pac-Man (labirinto cooperativo, 4 fantasmas) e seu adaptador `GameEngine` |
 | `server/src/rooms.ts` | `Room` (lobby, contagem, partida, ranking, auditoria) e `RoomManager` (códigos únicos, limpeza) |
 | `server/src/protocol.ts` | Tipos das mensagens WebSocket (compartilhados com o frontend) |
 | `server/src/index.ts` | Servidor HTTP/Socket.io e loop de 30 ticks |
 | `web/src/Tv.tsx` | Tela da TV: QR, lobby, tabuleiros, ranking |
 | `web/src/Controller.tsx` | Tela do celular: entrada, "pronto", controles, resultado, recordes |
-| `web/src/Board.tsx`, `SnakeArena.tsx` | Desenho do Tetris e da arena do Snake em canvas |
+| `web/src/Board.tsx`, `SnakeArena.tsx`, `PacmanMaze.tsx` | Desenho do Tetris e da arena do Snake em canvas |
 | `web/src/storage.ts` | localStorage (nome, top 5 de recordes) |
 
 ## Fluxo

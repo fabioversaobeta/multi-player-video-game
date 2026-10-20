@@ -1,9 +1,9 @@
 // Contrato de mensagens WebSocket entre servidor, TV e celulares.
 // O celular envia apenas INPUTS; o servidor é a fonte da verdade.
 
-export type InputAction = 'left' | 'right' | 'down' | 'a' | 'b' | 'pause';
+export type InputAction = 'up' | 'left' | 'right' | 'down' | 'a' | 'b' | 'pause';
 
-export type GameId = 'tetris' | 'snake' | 'pong' | 'invaders';
+export type GameId = 'tetris' | 'snake' | 'pong' | 'invaders' | 'pacman';
 
 export interface GameOption {
   id: GameId;
@@ -95,6 +95,20 @@ export type GameFrame =
       aliens: { x: number; y: number; row: number }[];
       shots: { x: number; y: number; enemy: boolean }[];
       ships: { id: string; x: number; lives: number; score: number; blink: boolean }[];
+    }
+  | {
+      game: 'pacman';
+      cols: number;
+      rows: number;
+      /** Uma string por linha: '#' parede, '.' ponto, 'o' pílula, 'H' casa dos fantasmas, ' ' vazio. */
+      grid: string[];
+      level: number;
+      /** Fantasmas assustados (pílula ativa); `flash` = prestes a acabar. */
+      frightened: boolean;
+      flash: boolean;
+      /** `face`: 0 cima, 1 direita, 2 baixo, 3 esquerda. Jogador eliminado tem lives 0. */
+      pacs: { id: string; x: number; y: number; face: number; lives: number; score: number; blink: boolean }[];
+      ghosts: { x: number; y: number; kind: number; scared: boolean }[];
     };
 
 export interface ClientToServer {
