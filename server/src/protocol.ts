@@ -3,7 +3,7 @@
 
 export type InputAction = 'up' | 'left' | 'right' | 'down' | 'a' | 'b' | 'pause';
 
-export type GameId = 'tetris' | 'snake' | 'pong' | 'invaders' | 'pacman';
+export type GameId = 'tetris' | 'snake' | 'pong' | 'invaders' | 'pacman' | 'bomberman';
 
 export interface GameOption {
   id: GameId;
@@ -109,6 +109,19 @@ export type GameFrame =
       /** `face`: 0 cima, 1 direita, 2 baixo, 3 esquerda. Jogador eliminado tem lives 0. */
       pacs: { id: string; x: number; y: number; face: number; lives: number; score: number; blink: boolean }[];
       ghosts: { x: number; y: number; kind: number; scared: boolean }[];
+    }
+  | {
+      game: 'bomberman';
+      cols: number;
+      rows: number;
+      /** Uma string por linha: '#' pilar/borda, 'B' bloco destrutível, ' ' livre. */
+      grid: string[];
+      secondsLeft: number;
+      /** `urgent` = prestes a explodir. */
+      bombs: { x: number; y: number; urgent: boolean }[];
+      flames: { x: number; y: number }[];
+      /** Jogador morto tem alive falso e posição -1. */
+      players: { id: string; x: number; y: number; alive: boolean; score: number }[];
     };
 
 export interface ClientToServer {

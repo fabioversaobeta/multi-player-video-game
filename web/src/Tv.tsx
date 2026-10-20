@@ -2,6 +2,7 @@ import { QRCodeSVG } from 'qrcode.react';
 import { useEffect, useState } from 'react';
 import type { GameFrame, RoomState } from '../../server/src/protocol';
 import { Board, PIECE_COLORS } from './Board';
+import { BombermanArena } from './BombermanArena';
 import { InvadersField } from './InvadersField';
 import { PacmanMaze } from './PacmanMaze';
 import { PongCourt } from './PongCourt';
@@ -214,6 +215,29 @@ export function Tv() {
           <div className="snake-score"><span className="pname">Nível</span><span className="score">{frame.level}</span></div>
         </div>
         <div className="board-wrap snake-wrap"><PacmanMaze frame={frame} players={room.players} size={size} /></div>
+      </div>
+    );
+  }
+
+  if (frame?.game === 'bomberman' && room.game === 'bomberman') {
+    const size = Math.max(8, Math.floor(Math.min((vp.w - 64) / frame.cols, (vp.h - 190) / frame.rows)));
+    return (
+      <div className="tv playing">
+        <div className="snake-scores">
+          {room.players.map((p, i) => {
+            const bp = frame.players.find((x) => x.id === p.id);
+            return (
+              <div key={p.id} className={'snake-score' + (bp?.alive ? '' : ' dead')} style={{ borderColor: p.color }}>
+                <span className="badge" style={{ background: p.color }}>J{i + 1}</span>
+                <span className="pname">{p.name}</span>
+                <span className="lives">{bp?.alive ? '♥' : '☠'}</span>
+                <span className="score">{bp?.score ?? 0}</span>
+              </div>
+            );
+          })}
+          <div className="snake-score"><span className="pname">Tempo</span><span className="score">{frame.secondsLeft}s</span></div>
+        </div>
+        <div className="board-wrap snake-wrap"><BombermanArena frame={frame} players={room.players} size={size} /></div>
       </div>
     );
   }

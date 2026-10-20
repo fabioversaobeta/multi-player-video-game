@@ -1,6 +1,7 @@
 // Registro dos jogos disponíveis. Para adicionar um jogo: implementar GameEngine e registrar aqui.
 import type { GameEngine } from './engine.js';
 import type { GameId, GameOption } from './protocol.js';
+import { BombermanEngine } from './bomberman-engine.js';
 import { InvadersEngine } from './invaders-engine.js';
 import { PacmanEngine } from './pacman-engine.js';
 import { PongEngine } from './pong-engine.js';
@@ -19,6 +20,7 @@ export const GAMES: Record<GameId, GameDef> = {
   pong: { id: 'pong', name: 'Pong', create: () => new PongEngine() },
   invaders: { id: 'invaders', name: 'Space Invaders', create: () => new InvadersEngine() },
   pacman: { id: 'pacman', name: 'Pac-Man', create: () => new PacmanEngine() },
+  bomberman: { id: 'bomberman', name: 'Bomberman', create: () => new BombermanEngine() },
 };
 
 export const GAME_OPTIONS: GameOption[] = Object.values(GAMES).map(({ id, name }) => ({ id, name }));

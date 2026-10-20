@@ -203,7 +203,20 @@ export function Controller({ code }: { code: string }) {
       {game === 'pong' && <div className="pad-hint">Segure ▲ ▼ para mover a raquete · vence quem fizer 7 pontos</div>}
       {game === 'invaders' && <div className="pad-hint">◀ ▶ movem a nave · FOGO atira (um tiro por vez)</div>}
       {game === 'pacman' && <div className="pad-hint">Toque numa direção: o Pac-Man segue até bater · coma tudo e fuja dos fantasmas</div>}
-      {game === 'pacman' ? (
+      {game === 'bomberman' && <div className="pad-hint">Ande pela arena · BOMBA explode em 3 s · último de pé vence</div>}
+      {game === 'bomberman' ? (
+        <div className="pad-grid">
+          <div className="dpad cross">
+            <PadButton label="▲" action="up" repeat send={send} className="up" />
+            <PadButton label="◀" action="left" repeat send={send} className="left" />
+            <PadButton label="▶" action="right" repeat send={send} className="right" />
+            <PadButton label="▼" action="down" repeat send={send} className="down-btn" />
+          </div>
+          <div className="abtns">
+            <PadButton label="BOMBA" action="a" send={send} className="round" />
+          </div>
+        </div>
+      ) : game === 'pacman' ? (
         <div className="pad-grid">
           <div className="dpad cross">
             <PadButton label="▲" action="up" send={send} className="up" />
