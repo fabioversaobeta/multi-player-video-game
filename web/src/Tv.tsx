@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import type { GameFrame, RoomState } from '../../server/src/protocol';
 import { Board, PIECE_COLORS } from './Board';
 import { InvadersField } from './InvadersField';
+import { PacmanMaze } from './PacmanMaze';
 import { PongCourt } from './PongCourt';
 import { SnakeArena } from './SnakeArena';
 import { connect, type AppSocket } from './socket';
@@ -189,6 +190,30 @@ export function Tv() {
           <div className="snake-score"><span className="pname">Onda</span><span className="score">{frame.wave}</span></div>
         </div>
         <div className="board-wrap snake-wrap"><InvadersField frame={frame} players={room.players} unit={unit} /></div>
+      </div>
+    );
+  }
+
+  if (frame?.game === 'pacman' && room.game === 'pacman') {
+    const size = Math.max(8, Math.floor(Math.min((vp.w - 64) / frame.cols, (vp.h - 190) / frame.rows)));
+    return (
+      <div className="tv playing">
+        <div className="snake-scores">
+          {room.players.map((p, i) => {
+            const pc = frame.pacs.find((x) => x.id === p.id);
+            const dead = !pc || pc.lives <= 0;
+            return (
+              <div key={p.id} className={'snake-score' + (dead ? ' dead' : '')} style={{ borderColor: p.color }}>
+                <span className="badge" style={{ background: p.color }}>J{i + 1}</span>
+                <span className="pname">{p.name}</span>
+                <span className="lives">{'♥'.repeat(pc?.lives ?? 0) + '♡'.repeat(Math.max(0, 3 - (pc?.lives ?? 0)))}</span>
+                <span className="score">{pc?.score ?? 0}</span>
+              </div>
+            );
+          })}
+          <div className="snake-score"><span className="pname">Nível</span><span className="score">{frame.level}</span></div>
+        </div>
+        <div className="board-wrap snake-wrap"><PacmanMaze frame={frame} players={room.players} size={size} /></div>
       </div>
     );
   }

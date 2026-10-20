@@ -73,6 +73,13 @@ body { overflow: hidden; touch-action: none; user-select: none; }
 .dpad.split.three { gap: 8px; }
 .dpad.split.three .pad-btn { flex: 1 1 0; }
 .dpad.split.three .pad-btn.round { flex: 0 0 28%; border-radius: 50%; font-size: 1rem; }
+/* Pac-Man: cruz direcional (▲ em cima, ◀ ▶ no meio, ▼ embaixo). */
+.dpad.cross { grid-template-columns: 1fr 1fr 1fr; grid-template-rows: 1fr 1fr 1fr; max-width: none; width: 100%; }
+.dpad.cross .pad-btn { max-height: none; align-self: stretch; }
+.dpad.cross .up { grid-column: 2; grid-row: 1; }
+.dpad.cross .left { grid-column: 1; grid-row: 2; }
+.dpad.cross .right { grid-column: 3; grid-row: 2; }
+.dpad.cross .down-btn { grid-column: 2; grid-row: 3; }
 /* Paisagem (celular deitado): botões compactos, ao alcance dos polegares. */
 @media (orientation: landscape) and (max-height: 500px) {
   .phone.pad { padding: 8px 12px; gap: 6px; }

@@ -55,6 +55,15 @@ Fonte de verdade das regras do projeto. Decisões do dono do produto (DP) e esco
 - **Pontos:** 30 (linha de cima), 20 (duas do meio), 10 (linha de baixo) para quem acertou. Limpar a onda inicia outra mais rápida e mais baixa.
 - **Fim:** todos eliminados **ou** os invasores chegam à linha das naves (todos perdem). Ranking pelos pontos. Sem pausa.
 
+## 4e. Pac-Man (DEV, provisório)
+- **Cooperativo:** todos os jogadores comem os pontos do **mesmo labirinto** 19×21 e fogem dos mesmos fantasmas. Jogadores não colidem entre si.
+- **Controles:** cruz ▲ ◀ ▶ ▼ no celular; o Pac-Man **segue andando** até bater numa parede e vira quando a direção pedida estiver livre. O túnel da linha central liga as bordas.
+- **Ritmo:** jogador a ~3,75 casas/s; fantasmas a 2,5 casas/s no nível 1 (aceleram a cada 2 níveis); o desenho desliza entre as casas (o servidor envia posição fracionária). **Fantasmas:** 1 no nível 1 e +1 a cada nível (máx. 8); sempre mais lentos que o jogador. Vagam pelo labirinto e só **perseguem** quem chega a até 6 casas (de caminho); se o jogador se afasta mais de 10 casas, **perdem o rastro** e voltam a vagar. **Até o jogador fazer o 1º movimento ele fica invencível e invisível aos fantasmas, e a casa dos fantasmas não libera ninguém** (o Pac-Man pisca na TV nesse período).
+- **Pontos:** 10 por ponto, 50 por pílula, 200 por fantasma assustado (para quem comeu). Pílula assusta todos os fantasmas (~8 s no nível 1, menos nos seguintes); o fantasma comido volta à casa.
+- **Vidas:** 3 por jogador; ao ser pego, reaparece no ponto de partida com ~3 s de invulnerabilidade. Sem vidas, está eliminado.
+- **Níveis:** limpar todos os pontos reinicia o labirinto com fantasmas mais rápidos e pílulas mais curtas.
+- **Fim:** todos eliminados. Ranking pelos pontos. Sem pausa. Novo comando `up` no protocolo (`InputAction`).
+
 ## 5. Controles no celular (DP)
 - **Setas** (esquerda, direita, descer rápido), **Pausa**, **Botão A** (confirma) e **Botão B** (volta).
 - Botões grandes, feedback visual ao toque (e vibração quando disponível), modo escuro.
