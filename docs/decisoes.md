@@ -64,6 +64,14 @@ Fonte de verdade das regras do projeto. Decisões do dono do produto (DP) e esco
 - **Níveis:** limpar todos os pontos reinicia o labirinto com fantasmas mais rápidos e pílulas mais curtas.
 - **Fim:** todos eliminados. Ranking pelos pontos. Sem pausa. Novo comando `up` no protocolo (`InputAction`).
 
+## 4f. Bomberman simplificado (DEV, provisório)
+- **Todos contra todos** numa arena 15×13 com pilares fixos e blocos destrutíveis (~70% das casas livres, geradas pela semente da partida). Cantos de partida e as casas vizinhas ficam sempre livres.
+- **Controles:** cruz ▲ ◀ ▶ ▼ (andam **uma casa** por toque; segurar repete, ~6 casas/s) e botão **BOMBA** (A). Sem power-ups.
+- **Bomba:** uma ativa por jogador, explode em 3 s com alcance de 2 casas em cruz; chama para nos pilares e destrói o primeiro bloco; bombas atingidas explodem em cadeia. Bombas bloqueiam a passagem.
+- **Vidas:** 1. Quem está numa casa em chamas é eliminado, inclusive o dono da bomba.
+- **Pontos:** 10 por bloco, 200 por jogador eliminado (não vale a própria bomba), 500 ao último de pé.
+- **Fim:** resta 1 jogador, ou 2min30 (sem bônus de vitória). Solo: termina ao morrer ou ao destruir todos os blocos. Ranking pelos pontos. Sem pausa.
+
 ## 5. Controles no celular (DP)
 - **Setas** (esquerda, direita, descer rápido), **Pausa**, **Botão A** (confirma) e **Botão B** (volta).
 - Botões grandes, feedback visual ao toque (e vibração quando disponível), modo escuro.
