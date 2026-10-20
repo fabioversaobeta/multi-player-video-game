@@ -3,7 +3,7 @@
 
 export type InputAction = 'up' | 'left' | 'right' | 'down' | 'a' | 'b' | 'pause';
 
-export type GameId = 'tetris' | 'snake' | 'pong' | 'invaders' | 'pacman' | 'bomberman' | 'topgear';
+export type GameId = 'tetris' | 'snake' | 'pong' | 'invaders' | 'pacman' | 'bomberman' | 'topgear' | 'doodle';
 
 export interface GameOption {
   id: GameId;
@@ -135,6 +135,18 @@ export type GameFrame =
       secondsLeft: number;
       /** `x` de -1 a 1 = pista; `place` 0 até cruzar a chegada; `blink` = batida recente. */
       cars: { id: string; x: number; z: number; speed: number; charges: number; turbo: boolean; finished: boolean; place: number; blink: boolean; score: number }[];
+    }
+  | {
+      game: 'doodle';
+      w: number;
+      h: number;
+      platformW: number;
+      secondsLeft: number;
+      /** Cada jogador tem a sua visão: `cam` = altura da base da tela; só as plataformas visíveis (frágeis já quebradas somem). */
+      jumpers: {
+        id: string; x: number; y: number; vy: number; face: number; cam: number; alive: boolean; score: number;
+        platforms: { x: number; y: number; kind: 'normal' | 'moving' | 'fragile' }[];
+      }[];
     };
 
 export interface ClientToServer {

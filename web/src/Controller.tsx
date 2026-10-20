@@ -205,6 +205,7 @@ export function Controller({ code }: { code: string }) {
       {game === 'pacman' && <div className="pad-hint">Toque numa direção: o Pac-Man segue até bater · coma tudo e fuja dos fantasmas</div>}
       {game === 'bomberman' && <div className="pad-hint">Ande pela arena · BOMBA explode em 3 s · último de pé vence</div>}
       {game === 'topgear' && <div className="pad-hint">◀ ▶ mudam de lado (as curvas empurram!) · NITRO: 3 turbos · desvie dos carros</div>}
+      {game === 'doodle' && <div className="pad-hint">◀ ▶ movem o personagem (ele pula sozinho) · suba o mais alto que puder · não caia!</div>}
       {game === 'topgear' ? (
         <div className="pad-grid">
           <div className="dpad split three">

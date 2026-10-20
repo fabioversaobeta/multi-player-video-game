@@ -4,6 +4,7 @@ import type { GameFrame, RoomState } from '../../server/src/protocol';
 import { Board, PIECE_COLORS } from './Board';
 import { BombermanArena } from './BombermanArena';
 import { InvadersField } from './InvadersField';
+import { DoodleTower } from './DoodleTower';
 import { PacmanMaze } from './PacmanMaze';
 import { PongCourt } from './PongCourt';
 import { TopGearRoad } from './TopGearRoad';
@@ -239,6 +240,46 @@ export function Tv() {
           <div className="snake-score"><span className="pname">Tempo</span><span className="score">{frame.secondsLeft}s</span></div>
         </div>
         <div className="board-wrap snake-wrap"><BombermanArena frame={frame} players={room.players} size={size} /></div>
+      </div>
+    );
+  }
+
+  if (frame?.game === 'doodle' && room.game === 'doodle') {
+    const n = Math.max(1, room.players.length);
+    const h = Math.max(240, vp.h - 230);
+    const w = Math.max(120, Math.min(Math.floor(h * 0.6), Math.floor(vp.w / n - 40)));
+    return (
+      <div className="tv playing">
+        <div className="snake-scores">
+          {room.players.map((p, i) => {
+            const j = frame.jumpers.find((x) => x.id === p.id);
+            return (
+              <div key={p.id} className={'snake-score' + (j?.alive ? '' : ' dead')} style={{ borderColor: p.color }}>
+                <span className="badge" style={{ background: p.color }}>J{i + 1}</span>
+                <span className="pname">{p.name}</span>
+                <span className="lives">{j?.alive ? '▲' : '☠'}</span>
+                <span className="score">{j?.score ?? 0}</span>
+              </div>
+            );
+          })}
+          <div className="snake-score"><span className="pname">Tempo</span><span className="score">{frame.secondsLeft}s</span></div>
+        </div>
+        <div className="boards">
+          {room.players.map((p) => {
+            const j = frame.jumpers.find((x) => x.id === p.id);
+            return (
+              <div key={p.id} className="board-wrap snake-wrap" style={{ position: 'relative' }}>
+                <DoodleTower frame={frame} jumperId={p.id} color={p.color} w={w} h={h} />
+                {j && !j.alive && (
+                  <div className="over-overlay">
+                    <strong>{j.score} m</strong>
+                    <small>caiu! aguardando os demais…</small>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
       </div>
     );
   }
