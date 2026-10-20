@@ -3,8 +3,8 @@ import cors from 'cors';
 import express from 'express';
 import { Server, type Socket } from 'socket.io';
 import type { ClientToServer, ServerToClient } from './protocol.js';
-import { RoomManager, type Room } from './rooms.js';
-import { TICKS_PER_SECOND } from './engine.js';
+import { RoomManager, type Room } from './rooms/rooms.js';
+import { TICKS_PER_SECOND } from './core/engine.js';
 
 const PORT = Number(process.env.PORT ?? 3001);
 const ORIGIN = process.env.CORS_ORIGIN ?? '*'; // em produção: URL do frontend na Vercel

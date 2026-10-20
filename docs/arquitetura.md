@@ -15,24 +15,25 @@ Node.js + Express + Socket.io (TypeScript) no backend; Vite + React + TypeScript
 ## Estrutura do código
 | Caminho | Responsabilidade |
 |---|---|
-| `server/src/engine.ts` | Interface `GameEngine`: contrato que todo jogo implementa (`start`, `input`, `step`, `isOver`, `score`, `playerOver`, `frame`, `drainEvents`) |
-| `server/src/games.ts` | Registro dos jogos disponíveis (`GAMES`); para adicionar um jogo, implementar `GameEngine` e registrar aqui |
-| `server/src/tetris.ts`, `tetris-engine.ts` | Regras do Tetris (funções puras) e seu adaptador `GameEngine` (um tabuleiro por jogador) |
-| `server/src/snake.ts`, `snake-engine.ts` | Regras do Snake (arena compartilhada) e seu adaptador `GameEngine` |
-| `server/src/pong.ts`, `pong-engine.ts` | Regras do Pong (duelo de raquetes, CPU quando há 1 jogador) e seu adaptador `GameEngine` |
-| `server/src/invaders.ts`, `invaders-engine.ts` | Regras do Space Invaders (arena cooperativa, uma nave por jogador) e seu adaptador `GameEngine` |
-| `server/src/pacman.ts`, `pacman-engine.ts` | Regras do Pac-Man (labirinto cooperativo, 4 fantasmas) e seu adaptador `GameEngine` |
-| `server/src/bomberman.ts`, `bomberman-engine.ts` | Regras do Bomberman simplificado (arena em grade, todos contra todos) e seu adaptador `GameEngine` |
-| `server/src/topgear.ts`, `topgear-engine.ts` | Regras do Top Gear simplificado (corrida com curvas, carros parados e turbo) e seu adaptador `GameEngine` |
-| `server/src/doodle.ts`, `doodle-engine.ts` | Regras do Doodle Jump simplificado (subida por plataformas, uma visão por jogador) e seu adaptador `GameEngine` |
-| `server/src/asteroids.ts`, `asteroids-engine.ts` | Regras do Asteroids simplificado (arena única, todos contra todos) e seu adaptador `GameEngine` |
-| `server/src/rooms.ts` | `Room` (lobby, contagem, partida, ranking, auditoria) e `RoomManager` (códigos únicos, limpeza) |
+| `server/src/core/engine.ts` | Interface `GameEngine`: contrato que todo jogo implementa (`start`, `input`, `step`, `isOver`, `score`, `playerOver`, `frame`, `drainEvents`) |
+| `server/src/core/rng.ts` | Gerador pseudoaleatório determinístico (semente) usado pelas regras |
+| `server/src/games/index.ts` | Registro dos jogos disponíveis (`GAMES`); para adicionar um jogo, criar `games/<jogo>/` com `rules.ts` e `engine.ts` e registrar aqui |
+| `server/src/games/tetris/` | `rules.ts` (regras puras do Tetris, um tabuleiro por jogador), `engine.ts` (adaptador `GameEngine`) e testes |
+| `server/src/games/snake/` | `rules.ts` (regras puras do Snake: arena compartilhada), `engine.ts` (adaptador `GameEngine`) e testes |
+| `server/src/games/pong/` | `rules.ts` (regras puras do Pong: duelo de raquetes, CPU quando há 1 jogador), `engine.ts` (adaptador `GameEngine`) e testes |
+| `server/src/games/invaders/` | `rules.ts` (regras puras do Space Invaders: arena cooperativa, uma nave por jogador), `engine.ts` (adaptador `GameEngine`) e testes |
+| `server/src/games/pacman/` | `rules.ts` (regras puras do Pac-Man: labirinto cooperativo, 4 fantasmas), `engine.ts` (adaptador `GameEngine`) e testes |
+| `server/src/games/bomberman/` | `rules.ts` (regras puras do Bomberman simplificado: arena em grade, todos contra todos), `engine.ts` (adaptador `GameEngine`) e testes |
+| `server/src/games/topgear/` | `rules.ts` (regras puras do Top Gear simplificado: corrida com curvas, carros parados e turbo), `engine.ts` (adaptador `GameEngine`) e testes |
+| `server/src/games/doodle/` | `rules.ts` (regras puras do Doodle Jump simplificado: subida por plataformas, uma visão por jogador), `engine.ts` (adaptador `GameEngine`) e testes |
+| `server/src/games/asteroids/` | `rules.ts` (regras puras do Asteroids simplificado: arena única, todos contra todos), `engine.ts` (adaptador `GameEngine`) e testes |
+| `server/src/rooms/rooms.ts` | `Room` (lobby, contagem, partida, ranking, auditoria) e `RoomManager` (códigos únicos, limpeza) |
 | `server/src/protocol.ts` | Tipos das mensagens WebSocket (compartilhados com o frontend) |
 | `server/src/index.ts` | Servidor HTTP/Socket.io e loop de 30 ticks |
-| `web/src/Tv.tsx` | Tela da TV: QR, lobby, tabuleiros, ranking |
-| `web/src/Controller.tsx` | Tela do celular: entrada, "pronto", controles, resultado, recordes |
-| `web/src/Board.tsx`, `SnakeArena.tsx`, `PacmanMaze.tsx`, `BombermanArena.tsx`, `TopGearRoad.tsx`, `DoodleTower.tsx`, `AsteroidsField.tsx` | Desenho do Tetris e da arena do Snake em canvas |
-| `web/src/storage.ts` | localStorage (nome, top 5 de recordes) |
+| `web/src/screens/Tv.tsx` | Tela da TV: QR, lobby, tabuleiros, ranking |
+| `web/src/screens/Controller.tsx` | Tela do celular: entrada, "pronto", controles, resultado, recordes |
+| `web/src/games/<jogo>/` | Componente de desenho em canvas de cada jogo (`Board`, `SnakeArena`, `PongCourt`, `InvadersField`, `PacmanMaze`, `BombermanArena`, `TopGearRoad`, `DoodleTower`, `AsteroidsField`) |
+| `web/src/lib/` | `socket.ts` (cliente Socket.io), `sounds.ts` (efeitos sonoros), `storage.ts` (localStorage: nome, top 5 de recordes) |
 
 ## Fluxo
 1. A TV abre `/`, cria a sala e exibe o QR para `/j/CODIGO`.
