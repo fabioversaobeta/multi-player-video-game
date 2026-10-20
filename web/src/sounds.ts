@@ -86,3 +86,18 @@ export function playGameOver(): void {
   const t = c.currentTime + 0.01;
   [G5, E5, C5, 392, 261.63].forEach((f, i) => tone(c, f, t + i * 0.22, i === 4 ? 0.8 : 0.28, 'triangle', 0.22));
 }
+
+/** Comeu: bip curto e agudo. */
+export function playEat(): void {
+  const c = ready();
+  if (c) tone(c, 880, c.currentTime + 0.01, 0.1, 'square', 0.15);
+}
+
+/** Bateu: tom grave descendente. */
+export function playCrash(): void {
+  const c = ready();
+  if (!c) return;
+  const t = c.currentTime + 0.01;
+  tone(c, 220, t, 0.15, 'sawtooth', 0.2);
+  tone(c, 140, t + 0.12, 0.3, 'sawtooth', 0.2);
+}

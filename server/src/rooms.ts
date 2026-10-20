@@ -1,10 +1,9 @@
 import { randomBytes, randomUUID } from 'node:crypto';
+import { TICKS_PER_SECOND, type GameEngine, type SfxKind } from './engine.js';
+import { DEFAULT_GAME, GAMES, GAME_OPTIONS, isGameId } from './games.js';
 import type {
-  BoardFrame, GameFrame, InputAction, Phase, PlayerInfo, RankingEntry, RoomState,
+  GameFrame, GameId, InputAction, Phase, PlayerInfo, RankingEntry, RoomState,
 } from './protocol.js';
-import {
-  TICKS_PER_SECOND, applyAction, createTetris, flatten, tick, type TetrisAction, type TetrisState,
-} from './tetris.js';
 
 export const MAX_PLAYERS = 4; // a estrutura não depende deste número (pode chegar a 6)
 export const COLORS = ['#ff4d4d', '#4da6ff', '#ffd94d', '#5ce65c', '#c77dff', '#ff9f43'];
@@ -28,13 +27,15 @@ interface Player {
   ready: boolean;
   connected: boolean;
   socketId: string | null;
-  game: TetrisState | null;
 }
 
 export class Room {
   readonly code: string;
   readonly tvToken = randomBytes(8).toString('hex');
   phase: Phase = 'lobby';
+  game: GameId = DEFAULT_GAME;
+  /** Motor da partida atual; existe de 'playing' até voltar ao lobby. */
+  private engine: GameEngine | null = null;
   tvSocketId: string | null = null;
   players = new Map<string, Player>();
   audit: AuditEntry[] = [];
@@ -42,14 +43,15 @@ export class Room {
   private matchPlayers: string[] = [];
   private countdownTicks = 0;
   private scoreTicks = 0;
-  private scoreSig = "";
+  private scoreSig = '';
+  private overSig = '';
   private ranking: RankingEntry[] | null = null;
   private matchId: string | null = null;
   emptySince: number | null = null;
   stateDirty = true;
   frameDirty = false;
-  /** Linhas fechadas aguardando envio ao celular do jogador (esvaziado pelo loop do servidor). */
-  lineEvents: { socketId: string; lines: number }[] = [];
+  /** Sons aguardando envio ao celular do jogador (esvaziado pelo loop do servidor). */
+  sfxEvents: { socketId: string; kind: SfxKind; value: number }[] = [];
 
   constructor(code: string, private maxPlayers = MAX_PLAYERS) {
     this.code = code;
@@ -81,7 +83,6 @@ export class Room {
       ready: false,
       connected: true,
       socketId,
-      game: null,
     };
     this.players.set(player.id, player);
     this.cancelCountdown();
@@ -130,6 +131,14 @@ export class Room {
     }
   }
 
+  /** Troca o jogo da próxima partida (só no lobby). Todos precisam confirmar "pronto" de novo. */
+  setGame(game: unknown): void {
+    if (this.phase !== 'lobby' || !isGameId(game) || game === this.game) return;
+    this.game = game;
+    for (const p of this.players.values()) p.ready = false;
+    this.touch();
+  }
+
   private cancelCountdown(): void {
     if (this.phase === 'countdown') {
       this.phase = 'lobby';
@@ -142,10 +151,10 @@ export class Room {
     this.ranking = null;
     this.matchId = randomBytes(6).toString('hex');
     this.matchPlayers = [...this.players.keys()];
-    const base = (Date.now() & 0xffffff) >>> 0;
-    this.matchPlayers.forEach((id, i) => {
-      this.players.get(id)!.game = createTetris(base + i * 7919);
-    });
+    this.engine = GAMES[this.game].create();
+    this.engine.start(this.matchPlayers, (Date.now() & 0xffffff) >>> 0);
+    this.scoreSig = '';
+    this.overSig = '';
     this.frameDirty = true;
   }
 
@@ -153,10 +162,10 @@ export class Room {
     if (this.phase !== 'results') return;
     for (const p of [...this.players.values()]) {
       p.ready = false;
-      p.game = null;
       if (!p.connected) this.players.delete(p.id);
     }
     this.matchPlayers = [];
+    this.engine = null;
     this.ranking = null;
     this.phase = 'lobby';
     this.touch();
@@ -174,12 +183,10 @@ export class Room {
       if (action === 'a') this.backToLobby();
       return;
     }
-    if (this.phase !== 'playing' || !p.game) return log(false, 'fora de partida');
-    if (action === 'pause') return log(false, 'pausa ignorada no multiplayer');
-    const before = p.game;
-    const after = applyAction(before, action as TetrisAction);
-    if (after === before) return log(false, 'movimento inválido');
-    this.setGame(p, after);
+    if (this.phase !== 'playing' || !this.engine) return log(false, 'fora de partida');
+    if (action === 'pause' && !this.engine.canPause) return log(false, 'pausa ignorada no multiplayer');
+    if (!this.engine.input(playerId, action)) return log(false, 'movimento inválido');
+    this.collectEvents();
     this.frameDirty = true;
     log(true);
   }
@@ -195,31 +202,31 @@ export class Room {
       }
       return;
     }
-    if (this.phase !== 'playing') return;
-    let allOver = true;
-    for (const id of this.matchPlayers) {
-      const p = this.players.get(id)!;
-      if (!p.game) continue;
-      const wasOver = p.game.over;
-      this.setGame(p, tick(p.game));
-      if (p.game.over && !wasOver) this.touch();
-      if (!p.game.over) allOver = false;
-    }
+    if (this.phase !== 'playing' || !this.engine) return;
+    this.engine.step();
+    this.collectEvents();
     this.frameDirty = true;
     this.syncScores();
-    if (allOver) this.finish();
+    if (this.engine.isOver()) this.finish();
   }
 
-  private setGame(p: Player, next: TetrisState): void {
-    const cleared = next.lines - (p.game?.lines ?? 0);
-    if (cleared > 0 && p.socketId) this.lineEvents.push({ socketId: p.socketId, lines: cleared });
-    p.game = next;
+  private collectEvents(): void {
+    for (const ev of this.engine?.drainEvents() ?? []) {
+      const socketId = this.players.get(ev.playerId)?.socketId;
+      if (socketId) this.sfxEvents.push({ socketId, kind: ev.kind, value: ev.value });
+    }
   }
 
-  /** Placar leve para os celulares: reenvia o estado da sala a cada ~1/3 s, só se algo mudou. */
+  /** Placar leve para os celulares: avisa na hora quando alguém perde e reenvia o placar a cada ~1/3 s se mudou. */
   private syncScores(): void {
+    const engine = this.engine!;
+    const over = this.matchPlayers.map((id) => (engine.playerOver(id) ? 1 : 0)).join('');
+    if (over !== this.overSig) {
+      this.overSig = over;
+      this.touch();
+    }
     if (++this.scoreTicks % 10 !== 0) return;
-    const sig = this.matchPlayers.map((id) => this.players.get(id)?.game?.score ?? 0).join(",");
+    const sig = this.matchPlayers.map((id) => engine.score(id)).join(',');
     if (sig !== this.scoreSig) {
       this.scoreSig = sig;
       this.touch();
@@ -227,11 +234,12 @@ export class Room {
   }
 
   private finish(): void {
+    const engine = this.engine!;
     const ordered = this.matchPlayers
       .map((id) => this.players.get(id)!)
-      .sort((a, b) => b.game!.score - a.game!.score);
+      .sort((a, b) => engine.score(b.id) - engine.score(a.id));
     this.ranking = ordered.map((p, i) => ({
-      position: i + 1, playerId: p.id, name: p.name, color: p.color, score: p.game!.score,
+      position: i + 1, playerId: p.id, name: p.name, color: p.color, score: engine.score(p.id),
     }));
     this.phase = 'results';
     this.touch();
@@ -251,13 +259,15 @@ export class Room {
       .filter((p): p is Player => !!p)
       .map((p) => ({
         id: p.id, name: p.name, color: p.color, ready: p.ready, connected: p.connected,
-        score: p.game?.score ?? 0, over: p.game?.over ?? false,
+        score: this.engine?.score(p.id) ?? 0, over: this.engine?.playerOver(p.id) ?? false,
       }));
     return {
       code: this.code,
       phase: this.phase,
+      game: this.game,
+      games: GAME_OPTIONS,
       maxPlayers: this.maxPlayers,
-      canPause: false, // Tetris multiplayer não tem pausa (ver input())
+      canPause: this.engine?.canPause ?? false,
       countdown: this.phase === 'countdown' ? Math.ceil(this.countdownTicks / TICKS_PER_SECOND) : null,
       matchId: this.matchId,
       players,
@@ -265,16 +275,9 @@ export class Room {
     };
   }
 
-  frame(): GameFrame {
-    const boards: Record<string, BoardFrame> = {};
-    for (const id of this.matchPlayers) {
-      const g = this.players.get(id)?.game;
-      if (!g) continue;
-      boards[id] = {
-        cells: flatten(g), next: g.next, score: g.score, lines: g.lines, level: g.level, over: g.over,
-      };
-    }
-    return { boards };
+  /** Quadro atual da partida, ou null se não há partida. */
+  frame(): GameFrame | null {
+    return this.engine?.frame() ?? null;
   }
 }
 

@@ -2,6 +2,7 @@ import { QRCodeSVG } from 'qrcode.react';
 import { useEffect, useState } from 'react';
 import type { GameFrame, RoomState } from '../../server/src/protocol';
 import { Board, PIECE_COLORS } from './Board';
+import { SnakeArena } from './SnakeArena';
 import { connect, type AppSocket } from './socket';
 
 const publicUrl = (import.meta.env.VITE_PUBLIC_URL as string | undefined) ?? location.origin;
@@ -81,6 +82,17 @@ export function Tv() {
               ))}
               {room.players.length === 0 && <li className="empty">Ninguém entrou ainda</li>}
             </ul>
+            <div className="game-picker">
+              {room.games.map((g) => (
+                <button
+                  key={g.id}
+                  className={'game-opt' + (g.id === room.game ? ' on' : '')}
+                  onClick={() => socket?.emit('room:game', { game: g.id })}
+                >
+                  {g.name}
+                </button>
+              ))}
+            </div>
             <p className="small">O jogo começa quando todos marcarem “Pronto”.</p>
           </div>
         </div>
@@ -108,6 +120,32 @@ export function Tv() {
         </button>
       </div>
     );
+  }
+
+  if (frame?.game === 'snake' && room.game === 'snake') {
+    const size = Math.max(8, Math.floor(Math.min((vp.w - 64) / frame.cols, (vp.h - 190) / frame.rows)));
+    return (
+      <div className="tv playing">
+        <div className="snake-scores">
+          {room.players.map((p, i) => {
+            const sn = frame.snakes.find((x) => x.id === p.id);
+            return (
+              <div key={p.id} className={'snake-score' + (sn && !sn.alive ? ' dead' : '')} style={{ borderColor: p.color }}>
+                <span className="badge" style={{ background: p.color }}>J{i + 1}</span>
+                <span className="pname">{p.name}</span>
+                <span className="score">{sn?.score ?? 0}</span>
+                {sn && !sn.alive && <span className="small">eliminado</span>}
+              </div>
+            );
+          })}
+        </div>
+        <div className="board-wrap snake-wrap"><SnakeArena frame={frame} players={room.players} size={size} /></div>
+      </div>
+    );
+  }
+
+  if (frame?.game !== 'tetris' || room.game !== 'tetris') {
+    return <div className="tv center"><p>Carregando partida…</p></div>;
   }
 
   const n = Math.max(1, room.players.length);

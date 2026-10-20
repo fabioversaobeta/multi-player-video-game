@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import type { InputAction, RoomState } from '../../server/src/protocol';
-import { playCountdown, playGameOver, playGo, playLineClear, unlockAudio } from './sounds';
+import {
+  playCountdown, playCrash, playEat, playGameOver, playGo, playLineClear, unlockAudio,
+} from './sounds';
 import { connect, type AppSocket } from './socket';
 import { addRecordOnce, getName, getRecords, resetRecords, saveName } from './storage';
 
@@ -38,7 +40,11 @@ export function Controller({ code }: { code: string }) {
     const s = connect();
     socketRef.current = s;
     s.on('room:state', setRoom);
-    s.on('player:lines', ({ lines }) => playLineClear(lines));
+    s.on('player:sfx', ({ kind, value }) => {
+      if (kind === 'lines') playLineClear(value);
+      else if (kind === 'eat') playEat();
+      else playCrash();
+    });
     // reconexão automática: se já entrou antes nesta sala, volta com o token
     s.on('connect', () => {
       if (nameRef.current && sessionStorage.getItem(joinedKey(code))) join(s);
@@ -47,11 +53,15 @@ export function Controller({ code }: { code: string }) {
   }, []);
 
   const me = room?.players.find((p) => p.id === playerId);
+  const game = room?.game ?? 'tetris';
+
+  // recordes mostrados são os do jogo escolhido na sala
+  useEffect(() => { setRecords(getRecords(game)); }, [game]);
 
   // grava o recorde local quando a partida termina
   useEffect(() => {
     if (room?.phase === 'results' && me && room.ranking && room.matchId) {
-      setRecords(addRecordOnce('tetris', room.matchId, me.name, me.score));
+      setRecords(addRecordOnce(room.game, room.matchId, me.name, me.score));
     }
   }, [room?.phase, room?.matchId, me?.id]);
 
@@ -109,6 +119,20 @@ export function Controller({ code }: { code: string }) {
         <div className="me-badge" style={{ background: me.color }}>{me.name}</div>
         <p>Você está conectado · sala {room.code}</p>
         <p className="small">{room.players.length} jogador(es) na sala</p>
+        {room.phase === 'lobby' && (
+          <div className="game-picker">
+            {room.games.map((g) => (
+              <button
+                key={g.id}
+                className={'game-opt' + (g.id === room.game ? ' on' : '')}
+                onClick={() => socketRef.current?.emit('room:game', { game: g.id })}
+              >
+                {g.name}
+              </button>
+            ))}
+          </div>
+        )}
+        {room.phase === 'countdown' && <p className="small">{room.games.find((g) => g.id === room.game)?.name}</p>}
         {room.phase === 'countdown' ? (
           <div className="countdown-small">{room.countdown}</div>
         ) : (
@@ -155,16 +179,19 @@ export function Controller({ code }: { code: string }) {
         <span>{me.name}</span><strong>{me.score}</strong>
       </div>
       {me.over && <div className="pad-over">Fim! {me.score} pts — aguarde os demais…</div>}
+      {game === 'snake' && <div className="pad-hint">Esquerda/direita giram a cobra</div>}
       <div className="pad-grid">
         <div className="dpad">
-          <PadButton label="◀" action="left" repeat send={send} />
-          <PadButton label="▼" action="down" repeat send={send} />
-          <PadButton label="▶" action="right" repeat send={send} />
+          <PadButton label="◀" action="left" repeat={game === 'tetris'} send={send} />
+          {game === 'tetris' && <PadButton label="▼" action="down" repeat send={send} />}
+          <PadButton label="▶" action="right" repeat={game === 'tetris'} send={send} />
         </div>
-        <div className="abtns">
-          <PadButton label="B" action="b" send={send} className="round" />
-          <PadButton label="A" action="a" send={send} className="round" />
-        </div>
+        {game === 'tetris' && (
+          <div className="abtns">
+            <PadButton label="B" action="b" send={send} className="round" />
+            <PadButton label="A" action="a" send={send} className="round" />
+          </div>
+        )}
       </div>
       {room.canPause && <PadButton label="PAUSA" action="pause" send={send} className="pause" />}
     </div>
