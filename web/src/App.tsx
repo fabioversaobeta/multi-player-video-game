@@ -1,5 +1,5 @@
-import { Controller } from './Controller';
-import { Tv } from './Tv';
+import { Controller } from './screens/Controller';
+import { Tv } from './screens/Tv';
 
 // "/" = TV (cria a sala); "/j/CODIGO" = celular (controle)
 export function App() {
