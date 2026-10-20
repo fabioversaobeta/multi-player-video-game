@@ -1,6 +1,7 @@
 // Registro dos jogos disponíveis. Para adicionar um jogo: implementar GameEngine e registrar aqui.
 import type { GameEngine } from './engine.js';
 import type { GameId, GameOption } from './protocol.js';
+import { InvadersEngine } from './invaders-engine.js';
 import { PongEngine } from './pong-engine.js';
 import { SnakeEngine } from './snake-engine.js';
 import { TetrisEngine } from './tetris-engine.js';
@@ -15,6 +16,7 @@ export const GAMES: Record<GameId, GameDef> = {
   tetris: { id: 'tetris', name: 'Tetris', create: () => new TetrisEngine() },
   snake: { id: 'snake', name: 'Snake', create: () => new SnakeEngine() },
   pong: { id: 'pong', name: 'Pong', create: () => new PongEngine() },
+  invaders: { id: 'invaders', name: 'Space Invaders', create: () => new InvadersEngine() },
 };
 
 export const GAME_OPTIONS: GameOption[] = Object.values(GAMES).map(({ id, name }) => ({ id, name }));
