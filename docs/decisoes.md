@@ -79,6 +79,13 @@ Fonte de verdade das regras do projeto. Decisões do dono do produto (DP) e esco
 - **Pontos:** até 300 pelo trecho percorrido + bônus de chegada (1º 1000, 2º 700, 3º 500, 4º 300).
 - **Fim:** todos cruzam a linha, 20 s depois do primeiro a chegar (multi) ou 2 min. Solo: termina ao chegar. Ranking pelos pontos. Sem pausa.
 
+## 4h. Doodle Jump simplificado (DEV, provisório)
+- **Subida** numa torre de plataformas gerada pela semente da partida (mesma torre para todos). Cada jogador tem a sua visão na TV (uma coluna por jogador) e não colide com os outros; o servidor decide tudo.
+- **Controles:** ◀ ▶ movem para o lado (segurar repete); o personagem pula sozinho ao pisar numa plataforma. A tela dá a volta nas laterais.
+- **Plataformas:** verdes (fixas), azuis (móveis) e marrons (frágeis: quebram ao pisar, por jogador). O espaçamento nunca passa da altura do pulo.
+- **Pontos:** altura máxima alcançada. **Fim de jogador:** cair abaixo da base da tela.
+- **Fim da partida:** todos caíram ou 2min30. Ranking pelos pontos. Sem pausa.
+
 ## 5. Controles no celular (DP)
 - **Setas** (esquerda, direita, descer rápido), **Pausa**, **Botão A** (confirma) e **Botão B** (volta).
 - Botões grandes, feedback visual ao toque (e vibração quando disponível), modo escuro.
