@@ -133,6 +133,7 @@ export function Tv() {
               <div key={p.id} className={'snake-score' + (sn && !sn.alive ? ' dead' : '')} style={{ borderColor: p.color }}>
                 <span className="badge" style={{ background: p.color }}>J{i + 1}</span>
                 <span className="pname">{p.name}</span>
+                <span className="lives">{'♥'.repeat(sn?.lives ?? 0) + '♡'.repeat(Math.max(0, 3 - (sn?.lives ?? 0)))}</span>
                 <span className="score">{sn?.score ?? 0}</span>
                 {sn && !sn.alive && <span className="small">eliminado</span>}
               </div>

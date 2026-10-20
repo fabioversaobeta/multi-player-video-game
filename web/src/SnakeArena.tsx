@@ -10,15 +10,21 @@ export function SnakeArena({ frame, players, size }: { frame: SnakeFrame; player
     const canvas = ref.current!;
     const ctx = canvas.getContext('2d')!;
     const { cols, rows } = frame;
-    ctx.fillStyle = '#05050c';
+    ctx.fillStyle = '#1a1a33'; // campo mais claro que o fundo da página
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.strokeStyle = 'rgba(255,255,255,0.04)';
+    ctx.strokeStyle = 'rgba(255,255,255,0.09)';
+    ctx.lineWidth = 1;
     for (let i = 1; i < cols; i++) {
       ctx.beginPath(); ctx.moveTo(i * size, 0); ctx.lineTo(i * size, rows * size); ctx.stroke();
     }
     for (let i = 1; i < rows; i++) {
       ctx.beginPath(); ctx.moveTo(0, i * size); ctx.lineTo(cols * size, i * size); ctx.stroke();
     }
+    // borda do tabuleiro: é um portal (a cobra reaparece do lado oposto), não uma parede
+    const wall = Math.max(3, Math.round(size * 0.14));
+    ctx.strokeStyle = '#00e5ff';
+    ctx.lineWidth = wall;
+    ctx.strokeRect(wall / 2, wall / 2, cols * size - wall, rows * size - wall);
     ctx.fillStyle = '#ffffff'; // branco: nenhuma cor de jogador é branca
     for (const [x, y] of frame.foods) {
       ctx.beginPath();

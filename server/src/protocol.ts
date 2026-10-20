@@ -64,6 +64,7 @@ export interface SnakeView {
   /** Casas [x, y] ocupadas, cabeça primeiro; vazio se a cobra morreu. */
   cells: [number, number][];
   alive: boolean;
+  lives: number;
   score: number;
 }
 

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { Room } from './rooms.js';
 import {
-  FOOD_POINTS, SNAKE_COLS, createSnake, moveInterval, stepSnake, turn, type SnakeState,
+  FOOD_POINTS, SNAKE_COLS, SNAKE_ROWS, START_LIVES, createSnake, moveInterval, stepSnake, turn, type SnakeState,
 } from './snake.js';
 
 /** Avança um movimento completo (vários ticks). */
@@ -46,12 +46,43 @@ describe('snake', () => {
     expect(s.foods).toHaveLength(2); // a comida é reposta
   });
 
-  it('bater na parede elimina', () => {
+  it('atravessa a borda e reaparece do lado oposto, sem perder vida', () => {
     const s = createSnake(['a'], 1);
     move(s, SNAKE_COLS);
+    expect(s.snakes[0].alive).toBe(true);
+    expect(s.snakes[0].lives).toBe(START_LIVES);
+    expect(s.snakes[0].body[0]).toEqual([4, 4]); // deu a volta completa
+    s.snakes[0].body = [[0, 5], [1, 5], [2, 5]];
+    s.snakes[0].dir = 3;
+    move(s);
+    expect(s.snakes[0].body[0]).toEqual([SNAKE_COLS - 1, 5]);
+    s.snakes[0].body = [[5, 0], [5, 1], [5, 2]];
+    s.snakes[0].dir = 0;
+    move(s);
+    expect(s.snakes[0].body[0]).toEqual([5, SNAKE_ROWS - 1]);
+  });
+
+  it('bater em si mesma custa uma vida e a cobra renasce', () => {
+    const s = createSnake(['a'], 1);
+    s.snakes[0].body = [[10, 5], [10, 6], [9, 6], [9, 5], [9, 4], [10, 4], [10, 3]];
+    s.snakes[0].dir = 0; // vai para (10,4), o próprio corpo
+    s.foods = [[0, 0], [31, 17]];
+    move(s);
+    expect(s.snakes[0].alive).toBe(true);
+    expect(s.snakes[0].lives).toBe(START_LIVES - 1);
+    expect(s.snakes[0].body).toHaveLength(3);
+    expect(s.crashed).toEqual(['a']);
+  });
+
+  it('sem vidas a cobra é eliminada', () => {
+    const s = createSnake(['a'], 1);
+    s.snakes[0].lives = 1;
+    s.snakes[0].body = [[10, 5], [10, 6], [9, 6], [9, 5], [9, 4], [10, 4], [10, 3]];
+    s.snakes[0].dir = 0;
+    s.foods = [[0, 0], [31, 17]];
+    move(s);
     expect(s.snakes[0].alive).toBe(false);
     expect(s.snakes[0].body).toEqual([]);
-    expect(s.crashed).toEqual(['a']);
   });
 
   it('cabeça contra cabeça elimina os dois', () => {
@@ -62,7 +93,7 @@ describe('snake', () => {
     s.snakes[1].dir = 3;
     s.foods = [[0, 0], [31, 17]];
     move(s);
-    expect(s.snakes.map((x) => x.alive)).toEqual([false, false]);
+    expect(s.snakes.map((x) => x.lives)).toEqual([START_LIVES - 1, START_LIVES - 1]);
   });
 
   it('bater no corpo de outra cobra elimina só quem bateu', () => {
@@ -73,8 +104,8 @@ describe('snake', () => {
     s.snakes[1].dir = 0; // sobe, segue viva
     s.foods = [[0, 0], [31, 17]];
     move(s);
-    expect(s.snakes[0].alive).toBe(false);
-    expect(s.snakes[1].alive).toBe(true);
+    expect(s.snakes[0].lives).toBe(START_LIVES - 1);
+    expect(s.snakes[1].lives).toBe(START_LIVES);
   });
 
   it('a própria cauda que sai libera a casa no mesmo movimento', () => {
@@ -138,7 +169,14 @@ describe('sala com Snake', () => {
     const { room, players } = startSnake(['Ana', 'Beto']);
     expect(room.phase).toBe('playing');
     expect(room.frame()?.game).toBe('snake');
-    // ninguém joga: as duas cobras batem na parede e a partida acaba
+    // cada cobra fica com 1 vida e um corpo prestes a bater em si mesma
+    const state = (room as any).engine.state as SnakeState;
+    for (const sn of state.snakes) {
+      const [x, y] = sn.body[0];
+      sn.lives = 1;
+      sn.dir = 0;
+      sn.body = [[x, y], [x, y + 1], [x - 1, y + 1], [x - 1, y], [x - 1, y - 1], [x, y - 1], [x, y - 2]];
+    }
     for (let i = 0; i < 30 * 60 && room.phase === 'playing'; i++) room.step();
     expect(room.phase).toBe('results');
     expect(room.state().ranking).toHaveLength(2);
