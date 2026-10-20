@@ -1,6 +1,6 @@
 // Adaptador do Doodle para a interface GameEngine.
 import { TICKS_PER_SECOND, type EngineEvent, type GameEngine } from '../../core/engine.js';
-import type { GameFrame, InputAction } from '../../protocol.js';
+import type { GameFrame, InputAction } from '@mpvg/shared';
 import {
   MATCH_TICKS, PLATFORM_W, VIEW_H, WIDTH, createDoodle, doodleOver, jumperScore, move, platformX, stepDoodle, type DoodleState,
 } from './rules.js';

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import type { InputAction, RoomState } from '../../../server/src/protocol';
+import type { InputAction, RoomState } from '@mpvg/shared';
 import {
   playCountdown, playCrash, playDrop, playEat, playGameOver, playGo, playLineClear, unlockAudio,
 } from '../lib/sounds';

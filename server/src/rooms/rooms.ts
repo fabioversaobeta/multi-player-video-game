@@ -3,7 +3,7 @@ import { TICKS_PER_SECOND, type GameEngine, type SfxKind } from '../core/engine.
 import { DEFAULT_GAME, GAMES, GAME_OPTIONS, isGameId } from '../games/index.js';
 import type {
   GameFrame, GameId, InputAction, Phase, PlayerInfo, RankingEntry, RoomState,
-} from '../protocol.js';
+} from '@mpvg/shared';
 
 export const MAX_PLAYERS = 4; // a estrutura não depende deste número (pode chegar a 6)
 export const COLORS = ['#ff4d4d', '#4da6ff', '#ffd94d', '#5ce65c', '#c77dff', '#ff9f43'];

@@ -1,6 +1,6 @@
 // Adaptador do Pong para a interface GameEngine.
 import type { EngineEvent, GameEngine } from '../../core/engine.js';
-import type { GameFrame, InputAction } from '../../protocol.js';
+import type { GameFrame, InputAction } from '@mpvg/shared';
 import { CPU_ID, PADDLE_H, PONG_H, PONG_W, createPong, movePaddle, pongOver, stepPong, type PongState } from './rules.js';
 
 export class PongEngine implements GameEngine {

@@ -28,7 +28,7 @@ Node.js + Express + Socket.io (TypeScript) no backend; Vite + React + TypeScript
 | `server/src/games/doodle/` | `rules.ts` (regras puras do Doodle Jump simplificado: subida por plataformas, uma visão por jogador), `engine.ts` (adaptador `GameEngine`) e testes |
 | `server/src/games/asteroids/` | `rules.ts` (regras puras do Asteroids simplificado: arena única, todos contra todos), `engine.ts` (adaptador `GameEngine`) e testes |
 | `server/src/rooms/rooms.ts` | `Room` (lobby, contagem, partida, ranking, auditoria) e `RoomManager` (códigos únicos, limpeza) |
-| `server/src/protocol.ts` | Tipos das mensagens WebSocket (compartilhados com o frontend) |
+| `shared/src/protocol.ts` | Tipos das mensagens WebSocket, pacote `@mpvg/shared` importado por servidor e web |
 | `server/src/index.ts` | Servidor HTTP/Socket.io e loop de 30 ticks |
 | `web/src/screens/Tv.tsx` | Tela da TV: QR, lobby, tabuleiros, ranking |
 | `web/src/screens/Controller.tsx` | Tela do celular: entrada, "pronto", controles, resultado, recordes |
@@ -45,7 +45,7 @@ Node.js + Express + Socket.io (TypeScript) no backend; Vite + React + TypeScript
 Fases da sala: `lobby` → `countdown` → `playing` → `results` → `lobby`. Entrada de novos jogadores só em `lobby`/`countdown`; quem sai no lobby é removido, quem sai durante a partida segue no jogo.
 
 ## Protocolo WebSocket
-Tipos em [`server/src/protocol.ts`](../server/src/protocol.ts).
+Tipos em [`shared/src/protocol.ts`](../shared/src/protocol.ts).
 
 | Evento | Direção | Conteúdo |
 |---|---|---|

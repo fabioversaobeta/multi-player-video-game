@@ -3,7 +3,7 @@ import type { EngineEvent, GameEngine } from '../../core/engine.js';
 import {
   PAC_COLS, PAC_INTERVAL, PAC_ROWS, createPacman, drawPos, ghostInterval, pacmanOver, steer, stepPacman, type PacmanState,
 } from './rules.js';
-import type { GameFrame, InputAction } from '../../protocol.js';
+import type { GameFrame, InputAction } from '@mpvg/shared';
 
 const ACTION_DIR: Partial<Record<InputAction, number>> = { up: 0, right: 1, down: 2, left: 3 };
 

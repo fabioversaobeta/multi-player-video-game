@@ -1,6 +1,6 @@
 // Contrato de um jogo plugável na sala. A sala cuida de lobby, contagem, ranking e conexões;
 // o motor cuida só das regras e do estado da partida.
-import type { GameFrame, InputAction } from '../protocol.js';
+import type { GameFrame, InputAction } from '@mpvg/shared';
 
 export const TICKS_PER_SECOND = 30;
 

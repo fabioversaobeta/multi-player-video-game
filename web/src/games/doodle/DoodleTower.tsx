@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import type { GameFrame } from '../../../../server/src/protocol';
+import type { GameFrame } from '@mpvg/shared';
 
 type DoodleFrame = Extract<GameFrame, { game: 'doodle' }>;
 
