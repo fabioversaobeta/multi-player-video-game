@@ -1,6 +1,7 @@
 import { QRCodeSVG } from 'qrcode.react';
 import { useEffect, useState } from 'react';
 import type { GameFrame, RoomState } from '../../server/src/protocol';
+import { AsteroidsField } from './AsteroidsField';
 import { Board, PIECE_COLORS } from './Board';
 import { BombermanArena } from './BombermanArena';
 import { InvadersField } from './InvadersField';
@@ -240,6 +241,30 @@ export function Tv() {
           <div className="snake-score"><span className="pname">Tempo</span><span className="score">{frame.secondsLeft}s</span></div>
         </div>
         <div className="board-wrap snake-wrap"><BombermanArena frame={frame} players={room.players} size={size} /></div>
+      </div>
+    );
+  }
+
+  if (frame?.game === 'asteroids' && room.game === 'asteroids') {
+    const w = Math.max(320, Math.floor(Math.min(vp.w - 64, (vp.h - 190) * (frame.w / frame.h))));
+    const h = Math.floor(w * (frame.h / frame.w));
+    return (
+      <div className="tv playing">
+        <div className="snake-scores">
+          {room.players.map((p, i) => {
+            const sh = frame.ships.find((x) => x.id === p.id);
+            return (
+              <div key={p.id} className={'snake-score' + (sh?.alive ? '' : ' dead')} style={{ borderColor: p.color }}>
+                <span className="badge" style={{ background: p.color }}>J{i + 1}</span>
+                <span className="pname">{p.name}</span>
+                <span className="lives">{sh?.alive ? '▲'.repeat(sh.lives) : '☠'}</span>
+                <span className="score">{sh?.score ?? 0}</span>
+              </div>
+            );
+          })}
+          <div className="snake-score"><span className="pname">Tempo</span><span className="score">{frame.secondsLeft}s</span></div>
+        </div>
+        <div className="board-wrap snake-wrap"><AsteroidsField frame={frame} players={room.players} w={w} h={h} /></div>
       </div>
     );
   }

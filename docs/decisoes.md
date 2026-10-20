@@ -86,6 +86,13 @@ Fonte de verdade das regras do projeto. Decisões do dono do produto (DP) e esco
 - **Pontos:** altura máxima alcançada. **Fim de jogador:** cair abaixo da base da tela.
 - **Fim da partida:** todos caíram ou 2min30. Ranking pelos pontos. Sem pausa.
 
+## 4i. Asteroids simplificado (DEV, provisório)
+- **Todos contra todos** numa arena única 160×90 que dá a volta nas bordas; asteroides gerados pela semente da partida (os grandes são repostos para a arena nunca esvaziar).
+- **Controles:** ◀ ▶ giram a nave (segurar repete), **PROPULSOR** (▲) acelera com inércia e **FOGO** (A) atira (até 4 tiros ativos, alcance limitado). Tiros acertam asteroides e as outras naves, nunca a própria.
+- **Asteroides:** grande → 2 médios → 2 pequenos. Pontos: 20 / 50 / 100 por rocha destruída; **300** por nave rival destruída.
+- **Vidas:** 3 por jogador. Ao ser atingido (tiro rival ou asteroide), reaparece num ponto livre com ~3 s de invulnerabilidade (a nave pisca). Sem vidas, está eliminado.
+- **Fim:** todos eliminados ou 2 min. Ranking pelos pontos. Sem pausa.
+
 ## 5. Controles no celular (DP)
 - **Setas** (esquerda, direita, descer rápido), **Pausa**, **Botão A** (confirma) e **Botão B** (volta).
 - Botões grandes, feedback visual ao toque (e vibração quando disponível), modo escuro.
