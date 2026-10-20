@@ -3,7 +3,7 @@
 
 export type InputAction = 'up' | 'left' | 'right' | 'down' | 'a' | 'b' | 'pause';
 
-export type GameId = 'tetris' | 'snake' | 'pong' | 'invaders' | 'pacman' | 'bomberman';
+export type GameId = 'tetris' | 'snake' | 'pong' | 'invaders' | 'pacman' | 'bomberman' | 'topgear';
 
 export interface GameOption {
   id: GameId;
@@ -122,6 +122,19 @@ export type GameFrame =
       flames: { x: number; y: number }[];
       /** Jogador morto tem alive falso e posição -1. */
       players: { id: string; x: number; y: number; alive: boolean; score: number }[];
+    }
+  | {
+      game: 'topgear';
+      /** Comprimento da pista e do trecho de cada curva. */
+      length: number;
+      segLen: number;
+      /** Curva de cada trecho: -1 (esquerda) a 1 (direita). */
+      curves: number[];
+      /** Carros parados na pista (x de -1 a 1). */
+      obstacles: { x: number; z: number }[];
+      secondsLeft: number;
+      /** `x` de -1 a 1 = pista; `place` 0 até cruzar a chegada; `blink` = batida recente. */
+      cars: { id: string; x: number; z: number; speed: number; charges: number; turbo: boolean; finished: boolean; place: number; blink: boolean; score: number }[];
     };
 
 export interface ClientToServer {

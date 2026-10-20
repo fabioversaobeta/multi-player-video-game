@@ -23,12 +23,13 @@ Node.js + Express + Socket.io (TypeScript) no backend; Vite + React + TypeScript
 | `server/src/invaders.ts`, `invaders-engine.ts` | Regras do Space Invaders (arena cooperativa, uma nave por jogador) e seu adaptador `GameEngine` |
 | `server/src/pacman.ts`, `pacman-engine.ts` | Regras do Pac-Man (labirinto cooperativo, 4 fantasmas) e seu adaptador `GameEngine` |
 | `server/src/bomberman.ts`, `bomberman-engine.ts` | Regras do Bomberman simplificado (arena em grade, todos contra todos) e seu adaptador `GameEngine` |
+| `server/src/topgear.ts`, `topgear-engine.ts` | Regras do Top Gear simplificado (corrida com curvas, carros parados e turbo) e seu adaptador `GameEngine` |
 | `server/src/rooms.ts` | `Room` (lobby, contagem, partida, ranking, auditoria) e `RoomManager` (códigos únicos, limpeza) |
 | `server/src/protocol.ts` | Tipos das mensagens WebSocket (compartilhados com o frontend) |
 | `server/src/index.ts` | Servidor HTTP/Socket.io e loop de 30 ticks |
 | `web/src/Tv.tsx` | Tela da TV: QR, lobby, tabuleiros, ranking |
 | `web/src/Controller.tsx` | Tela do celular: entrada, "pronto", controles, resultado, recordes |
-| `web/src/Board.tsx`, `SnakeArena.tsx`, `PacmanMaze.tsx`, `BombermanArena.tsx` | Desenho do Tetris e da arena do Snake em canvas |
+| `web/src/Board.tsx`, `SnakeArena.tsx`, `PacmanMaze.tsx`, `BombermanArena.tsx`, `TopGearRoad.tsx` | Desenho do Tetris e da arena do Snake em canvas |
 | `web/src/storage.ts` | localStorage (nome, top 5 de recordes) |
 
 ## Fluxo
