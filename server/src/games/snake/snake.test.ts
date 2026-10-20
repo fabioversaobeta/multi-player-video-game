@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { Room } from '../../rooms/rooms.js';
+import { Room } from '../../rooms/index.js';
 import {
   FOOD_POINTS, SNAKE_COLS, SNAKE_ROWS, START_LIVES, createSnake, moveInterval, stepSnake, turn, type SnakeState,
 } from './rules.js';
