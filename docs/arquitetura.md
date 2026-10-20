@@ -18,15 +18,15 @@ Node.js + Express + Socket.io (TypeScript) no backend; Vite + React + TypeScript
 | `server/src/core/engine.ts` | Interface `GameEngine`: contrato que todo jogo implementa (`start`, `input`, `step`, `isOver`, `score`, `playerOver`, `frame`, `drainEvents`) |
 | `server/src/core/rng.ts` | Gerador pseudoaleatório determinístico (semente) usado pelas regras |
 | `server/src/games/index.ts` | Registro dos jogos disponíveis (`GAMES`); para adicionar um jogo, criar `games/<jogo>/` com `rules.ts` e `engine.ts` e registrar aqui |
-| `server/src/games/tetris/` | `rules.ts` (Regras do Tetris (funções puras) (um tabuleiro por jogador), funções puras), `engine.ts` (adaptador `GameEngine`) e testes |
-| `server/src/games/snake/` | `rules.ts` (Regras do Snake (arena compartilhada), funções puras), `engine.ts` (adaptador `GameEngine`) e testes |
-| `server/src/games/pong/` | `rules.ts` (Regras do Pong (duelo de raquetes, CPU quando há 1 jogador), funções puras), `engine.ts` (adaptador `GameEngine`) e testes |
-| `server/src/games/invaders/` | `rules.ts` (Regras do Space Invaders (arena cooperativa, uma nave por jogador), funções puras), `engine.ts` (adaptador `GameEngine`) e testes |
-| `server/src/games/pacman/` | `rules.ts` (Regras do Pac-Man (labirinto cooperativo, 4 fantasmas), funções puras), `engine.ts` (adaptador `GameEngine`) e testes |
-| `server/src/games/bomberman/` | `rules.ts` (Regras do Bomberman simplificado (arena em grade, todos contra todos), funções puras), `engine.ts` (adaptador `GameEngine`) e testes |
-| `server/src/games/topgear/` | `rules.ts` (Regras do Top Gear simplificado (corrida com curvas, carros parados e turbo), funções puras), `engine.ts` (adaptador `GameEngine`) e testes |
-| `server/src/games/doodle/` | `rules.ts` (Regras do Doodle Jump simplificado (subida por plataformas, uma visão por jogador), funções puras), `engine.ts` (adaptador `GameEngine`) e testes |
-| `server/src/games/asteroids/` | `rules.ts` (Regras do Asteroids simplificado (arena única, todos contra todos), funções puras), `engine.ts` (adaptador `GameEngine`) e testes |
+| `server/src/games/tetris/` | `rules.ts` (regras puras do Tetris, um tabuleiro por jogador), `engine.ts` (adaptador `GameEngine`) e testes |
+| `server/src/games/snake/` | `rules.ts` (regras puras do Snake: arena compartilhada), `engine.ts` (adaptador `GameEngine`) e testes |
+| `server/src/games/pong/` | `rules.ts` (regras puras do Pong: duelo de raquetes, CPU quando há 1 jogador), `engine.ts` (adaptador `GameEngine`) e testes |
+| `server/src/games/invaders/` | `rules.ts` (regras puras do Space Invaders: arena cooperativa, uma nave por jogador), `engine.ts` (adaptador `GameEngine`) e testes |
+| `server/src/games/pacman/` | `rules.ts` (regras puras do Pac-Man: labirinto cooperativo, 4 fantasmas), `engine.ts` (adaptador `GameEngine`) e testes |
+| `server/src/games/bomberman/` | `rules.ts` (regras puras do Bomberman simplificado: arena em grade, todos contra todos), `engine.ts` (adaptador `GameEngine`) e testes |
+| `server/src/games/topgear/` | `rules.ts` (regras puras do Top Gear simplificado: corrida com curvas, carros parados e turbo), `engine.ts` (adaptador `GameEngine`) e testes |
+| `server/src/games/doodle/` | `rules.ts` (regras puras do Doodle Jump simplificado: subida por plataformas, uma visão por jogador), `engine.ts` (adaptador `GameEngine`) e testes |
+| `server/src/games/asteroids/` | `rules.ts` (regras puras do Asteroids simplificado: arena única, todos contra todos), `engine.ts` (adaptador `GameEngine`) e testes |
 | `server/src/rooms/rooms.ts` | `Room` (lobby, contagem, partida, ranking, auditoria) e `RoomManager` (códigos únicos, limpeza) |
 | `server/src/protocol.ts` | Tipos das mensagens WebSocket (compartilhados com o frontend) |
 | `server/src/index.ts` | Servidor HTTP/Socket.io e loop de 30 ticks |
