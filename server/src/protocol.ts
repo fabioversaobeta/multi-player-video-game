@@ -3,7 +3,7 @@
 
 export type InputAction = 'left' | 'right' | 'down' | 'a' | 'b' | 'pause';
 
-export type GameId = 'tetris' | 'snake' | 'pong';
+export type GameId = 'tetris' | 'snake' | 'pong' | 'invaders';
 
 export interface GameOption {
   id: GameId;
@@ -80,6 +80,21 @@ export type GameFrame =
       ball: { x: number; y: number };
       /** Esquerda e direita; `id` nulo = raquete controlada pelo servidor (CPU). */
       paddles: { id: string | null; x: number; y: number; score: number }[];
+    }
+  | {
+      game: 'invaders';
+      w: number;
+      h: number;
+      shipY: number;
+      shipW: number;
+      shipH: number;
+      alienW: number;
+      alienH: number;
+      wave: number;
+      /** Centro de cada invasor vivo; `row` define a cor. */
+      aliens: { x: number; y: number; row: number }[];
+      shots: { x: number; y: number; enemy: boolean }[];
+      ships: { id: string; x: number; lives: number; score: number; blink: boolean }[];
     };
 
 export interface ClientToServer {

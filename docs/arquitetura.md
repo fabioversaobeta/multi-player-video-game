@@ -20,6 +20,7 @@ Node.js + Express + Socket.io (TypeScript) no backend; Vite + React + TypeScript
 | `server/src/tetris.ts`, `tetris-engine.ts` | Regras do Tetris (funções puras) e seu adaptador `GameEngine` (um tabuleiro por jogador) |
 | `server/src/snake.ts`, `snake-engine.ts` | Regras do Snake (arena compartilhada) e seu adaptador `GameEngine` |
 | `server/src/pong.ts`, `pong-engine.ts` | Regras do Pong (duelo de raquetes, CPU quando há 1 jogador) e seu adaptador `GameEngine` |
+| `server/src/invaders.ts`, `invaders-engine.ts` | Regras do Space Invaders (arena cooperativa, uma nave por jogador) e seu adaptador `GameEngine` |
 | `server/src/rooms.ts` | `Room` (lobby, contagem, partida, ranking, auditoria) e `RoomManager` (códigos únicos, limpeza) |
 | `server/src/protocol.ts` | Tipos das mensagens WebSocket (compartilhados com o frontend) |
 | `server/src/index.ts` | Servidor HTTP/Socket.io e loop de 30 ticks |

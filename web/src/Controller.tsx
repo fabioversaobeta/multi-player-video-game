@@ -201,10 +201,12 @@ export function Controller({ code }: { code: string }) {
       {me.over && <div className="pad-over">Fim! {me.score} pts — aguarde os demais…</div>}
       {game === 'snake' && <div className="pad-hint">Esquerda/direita giram a cobra</div>}
       {game === 'pong' && <div className="pad-hint">Segure ▲ ▼ para mover a raquete · vence quem fizer 7 pontos</div>}
+      {game === 'invaders' && <div className="pad-hint">◀ ▶ movem a nave · FOGO atira (um tiro por vez)</div>}
       <div className="pad-grid">
-        <div className={game === 'tetris' ? 'dpad' : 'dpad split'}>
+        <div className={game === 'tetris' ? 'dpad' : game === 'invaders' ? 'dpad split three' : 'dpad split'}>
           <PadButton label={game === 'pong' ? '▲' : '◀'} action="left" repeat={game !== 'snake'} send={send} />
           {game === 'tetris' && <PadButton label="▼" action="down" repeat send={send} />}
+          {game === 'invaders' && <PadButton label="FOGO" action="a" repeat send={send} className="round" />}
           <PadButton label={game === 'pong' ? '▼' : '▶'} action="right" repeat={game !== 'snake'} send={send} />
         </div>
         {game === 'tetris' && (

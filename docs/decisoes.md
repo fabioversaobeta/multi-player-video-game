@@ -47,6 +47,14 @@ Fonte de verdade das regras do projeto. Decisões do dono do produto (DP) e esco
 - **Bola:** o ângulo de saída depende do ponto de contato na raquete; cada rebatida acelera até um limite. Quem tomou o ponto recebe o saque.
 - **Fim:** o primeiro a fazer **7 pontos** vence; o ranking é pelos pontos. Sem pausa.
 
+## 4d. Space Invaders (DEV, provisório)
+- **Cooperativo:** todos defendem a mesma arena 100×70, cada um com sua nave (cor do jogador) embaixo; pelotão de 9×4 invasores.
+- **Controles:** ◀ ▶ movem a nave (repete ao segurar) e **FOGO** atira; só **1 tiro por vez** por jogador.
+- **Pelotão:** anda para o lado e desce ao bater na borda; acelera conforme sobram menos invasores e a cada onda. Os invasores soltam bombas.
+- **Vidas:** 3 por jogador, com ~2 s de invulnerabilidade após ser atingido. Sem vidas, o jogador está eliminado.
+- **Pontos:** 30 (linha de cima), 20 (duas do meio), 10 (linha de baixo) para quem acertou. Limpar a onda inicia outra mais rápida e mais baixa.
+- **Fim:** todos eliminados **ou** os invasores chegam à linha das naves (todos perdem). Ranking pelos pontos. Sem pausa.
+
 ## 5. Controles no celular (DP)
 - **Setas** (esquerda, direita, descer rápido), **Pausa**, **Botão A** (confirma) e **Botão B** (volta).
 - Botões grandes, feedback visual ao toque (e vibração quando disponível), modo escuro.
