@@ -41,6 +41,12 @@ Fonte de verdade das regras do projeto. Decisões do dono do produto (DP) e esco
 - **Velocidade:** 5 casas/s, acelerando até 10 casas/s a cada 25 s de partida.
 - **Escolha do jogo:** feita no lobby, pela TV ou por qualquer celular; trocar o jogo zera os "prontos".
 
+## 4c. Pong (DEV, provisório)
+- **Duelo de raquetes** num campo 100×60: o 1º jogador da sala fica à esquerda, o 2º à direita; com 1 jogador, a raquete da direita é a **CPU**; do 3º em diante só assistem.
+- **Controles:** botões ▲ (esquerda) e ▼ (direita) nos cantos; cada comando move a raquete um passo fixo (o celular repete enquanto o botão está pressionado).
+- **Bola:** o ângulo de saída depende do ponto de contato na raquete; cada rebatida acelera até um limite. Quem tomou o ponto recebe o saque.
+- **Fim:** o primeiro a fazer **7 pontos** vence; o ranking é pelos pontos. Sem pausa.
+
 ## 5. Controles no celular (DP)
 - **Setas** (esquerda, direita, descer rápido), **Pausa**, **Botão A** (confirma) e **Botão B** (volta).
 - Botões grandes, feedback visual ao toque (e vibração quando disponível), modo escuro.

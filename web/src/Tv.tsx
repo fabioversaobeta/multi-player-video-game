@@ -2,6 +2,7 @@ import { QRCodeSVG } from 'qrcode.react';
 import { useEffect, useState } from 'react';
 import type { GameFrame, RoomState } from '../../server/src/protocol';
 import { Board, PIECE_COLORS } from './Board';
+import { PongCourt } from './PongCourt';
 import { SnakeArena } from './SnakeArena';
 import { connect, type AppSocket } from './socket';
 
@@ -141,6 +142,28 @@ export function Tv() {
           })}
         </div>
         <div className="board-wrap snake-wrap"><SnakeArena frame={frame} players={room.players} size={size} /></div>
+      </div>
+    );
+  }
+
+  if (frame?.game === 'pong' && room.game === 'pong') {
+    const unit = Math.max(4, Math.floor(Math.min((vp.w - 64) / frame.w, (vp.h - 190) / frame.h)));
+    return (
+      <div className="tv playing">
+        <div className="snake-scores">
+          {frame.paddles.map((pd, i) => {
+            const p = room.players.find((x) => x.id === pd.id);
+            const color = p?.color ?? '#9aa0b4';
+            return (
+              <div key={i} className="snake-score" style={{ borderColor: color }}>
+                <span className="badge" style={{ background: color }}>{p ? `J${room.players.indexOf(p) + 1}` : 'CPU'}</span>
+                <span className="pname">{p?.name ?? 'Computador'}</span>
+                <span className="score">{pd.score}</span>
+              </div>
+            );
+          })}
+        </div>
+        <div className="board-wrap snake-wrap"><PongCourt frame={frame} players={room.players} unit={unit} /></div>
       </div>
     );
   }
