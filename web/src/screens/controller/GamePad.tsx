@@ -10,7 +10,6 @@ const HINTS: Partial<Record<GameId, string>> = {
   bomberman: 'Ande pela arena · BOMBA explode em 3 s · último de pé vence',
   topgear: '◀ ▶ mudam de lado (as curvas empurram!) · NITRO: 3 turbos · desvie dos carros',
   doodle: '◀ ▶ movem o personagem (ele pula sozinho) · suba o mais alto que puder · não caia!',
-  asteroids: '◀ ▶ giram a nave · PROPULSOR acelera · FOGO atira · acerte rochas e rivais (3 vidas)',
 };
 
 interface Props {
@@ -37,20 +36,6 @@ export function GamePad({ room, me, game, style, send }: Props) {
 }
 
 function Buttons({ game, send }: { game: GameId; send: (a: InputAction) => void }) {
-  if (game === 'asteroids') {
-    return (
-      <div className="pad-grid">
-        <div className="dpad split three">
-          <PadButton label="◀" action="left" repeat send={send} />
-          <PadButton label="PROPULSOR" action="up" repeat send={send} className="round" />
-          <PadButton label="▶" action="right" repeat send={send} />
-        </div>
-        <div className="abtns">
-          <PadButton label="FOGO" action="a" repeat send={send} className="round" />
-        </div>
-      </div>
-    );
-  }
   if (game === 'topgear') {
     return (
       <div className="pad-grid">

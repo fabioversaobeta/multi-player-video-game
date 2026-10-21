@@ -1,7 +1,6 @@
 // Registro dos jogos disponíveis. Para adicionar um jogo: implementar GameEngine e registrar aqui.
 import type { GameEngine } from '../core/engine.js';
 import type { GameId, GameOption } from '@mpvg/shared';
-import { AsteroidsEngine } from './asteroids/engine.js';
 import { BombermanEngine } from './bomberman/engine.js';
 import { DoodleEngine } from './doodle/engine.js';
 import { InvadersEngine } from './invaders/engine.js';
@@ -26,7 +25,6 @@ export const GAMES: Record<GameId, GameDef> = {
   bomberman: { id: 'bomberman', name: 'Bomberman', create: () => new BombermanEngine() },
   topgear: { id: 'topgear', name: 'Top Gear', create: () => new TopGearEngine() },
   doodle: { id: 'doodle', name: 'Doodle Jump', create: () => new DoodleEngine() },
-  asteroids: { id: 'asteroids', name: 'Asteroids', create: () => new AsteroidsEngine() },
 };
 
 export const GAME_OPTIONS: GameOption[] = Object.values(GAMES).map(({ id, name }) => ({ id, name }));

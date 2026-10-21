@@ -3,7 +3,7 @@
 
 export type InputAction = 'up' | 'left' | 'right' | 'down' | 'a' | 'b' | 'pause';
 
-export type GameId = 'tetris' | 'snake' | 'pong' | 'invaders' | 'pacman' | 'bomberman' | 'topgear' | 'doodle' | 'asteroids';
+export type GameId = 'tetris' | 'snake' | 'pong' | 'invaders' | 'pacman' | 'bomberman' | 'topgear' | 'doodle';
 
 export interface GameOption {
   id: GameId;
@@ -147,17 +147,6 @@ export type GameFrame =
         id: string; x: number; y: number; vy: number; face: number; cam: number; alive: boolean; score: number;
         platforms: { x: number; y: number; kind: 'normal' | 'moving' | 'fragile' }[];
       }[];
-    }
-  | {
-      game: 'asteroids';
-      /** Arena única que dá a volta; `angle` em radianos (0 = direita, y para cima). */
-      w: number;
-      h: number;
-      shipR: number;
-      secondsLeft: number;
-      ships: { id: string; x: number; y: number; angle: number; alive: boolean; lives: number; invuln: boolean; thrusting: boolean; score: number }[];
-      rocks: { x: number; y: number; r: number }[];
-      bullets: { x: number; y: number; owner: string }[];
     };
 
 export interface ClientToServer {
