@@ -1,6 +1,5 @@
 import type { GameFrame, RoomState } from '@mpvg/shared';
 import type { Viewport } from '../lib/useViewport';
-import { AsteroidsTv } from './asteroids/AsteroidsTv';
 import { BombermanTv } from './bomberman/BombermanTv';
 import { DoodleTv } from './doodle/DoodleTv';
 import { InvadersTv } from './invaders/InvadersTv';
@@ -13,7 +12,6 @@ import { TopGearTv } from './topgear/TopGearTv';
 /** Escolhe a visão de TV do jogo do quadro. Para um jogo novo, acrescente um `case`. */
 export function TvView({ frame, room, vp }: { frame: GameFrame; room: RoomState; vp: Viewport }) {
   switch (frame.game) {
-    case 'asteroids': return <AsteroidsTv frame={frame} room={room} vp={vp} />;
     case 'bomberman': return <BombermanTv frame={frame} room={room} vp={vp} />;
     case 'doodle': return <DoodleTv frame={frame} room={room} vp={vp} />;
     case 'invaders': return <InvadersTv frame={frame} room={room} vp={vp} />;
