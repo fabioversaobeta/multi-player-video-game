@@ -5,16 +5,21 @@
 ![Socket.io](https://img.shields.io/badge/Socket.io-010101?logo=socketdotio&logoColor=white)
 ![Vitest](https://img.shields.io/badge/Vitest-6E9F18?logo=vitest&logoColor=white)
 
-**Retro party games in the browser.** The TV shows the game and each player uses their phone as a controller: scan a QR code, type a name and play. No login, no install, 1–4 players. It starts with Tetris.
+**Retro party games in the browser.** The TV shows the game and each player uses their phone as a controller: scan a QR code, type a name and play. No login, no install, 1–4 players. The lobby offers 8 games (Tetris, Snake, Pong, Space Invaders, Pac-Man, Bomberman, Top Gear and Doodle Jump); Tetris is the most complete.
 
-<!-- TODO: add a photo/GIF of the TV screen + phone controller, e.g.
-<p align="center"><img src="docs/images/demo.gif" width="700" /></p> -->
+<p align="center">
+  <img src="docs/images/lobby.png" alt="TV lobby with QR code and game picker" width="700" /><br/>
+  <img src="docs/images/game.png" alt="Two-player Tetris on the TV" width="700" />
+</p>
+<p align="center">
+  <img src="docs/images/controller.png" alt="Phone controller" width="220" />
+</p>
 
 ## Highlights
 
 - **Authoritative server:** game rules run on the server at 30 ticks/s; TV and phones only render and send input, which keeps everyone in sync.
 - **Real-time over WebSockets** (Socket.io): rooms, lobby with "ready" and countdown, per-player game over and a final ranking.
-- **Pluggable game engines:** a `GameEngine` interface lets new games plug into a room. Tetris is the first engine and Snake was built as the second to validate the abstraction.
+- **Pluggable game engines:** a `GameEngine` interface lets new games plug into a room. Each game is an engine behind that interface: Tetris came first, and Snake, Pong, Space Invaders, Pac-Man, Bomberman, Top Gear and Doodle Jump followed.
 - **Zero-friction onboarding:** the QR code opens `/j/<ROOM_CODE>` on the phone.
 - **Server unit tests** with Vitest.
 
