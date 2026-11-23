@@ -1,35 +1,54 @@
-# Multi-Player Video Game
+# 🎮 Multi-Player Video Game
 
-Jogos retrô multiplayer no navegador: a **TV** mostra o jogo e cada jogador usa o **celular como controle** (1 a 4 jogadores, entrada por QR Code, sem login). Começa com Tetris.
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)
+![React](https://img.shields.io/badge/React-61DAFB?logo=react&logoColor=black)
+![Socket.io](https://img.shields.io/badge/Socket.io-010101?logo=socketdotio&logoColor=white)
+![Vitest](https://img.shields.io/badge/Vitest-6E9F18?logo=vitest&logoColor=white)
 
-## Rodar localmente
+**Retro party games in the browser.** The TV shows the game and each player uses their phone as a controller: scan a QR code, type a name and play. No login, no install, 1–4 players. It starts with Tetris.
+
+<!-- TODO: add a photo/GIF of the TV screen + phone controller, e.g.
+<p align="center"><img src="docs/images/demo.gif" width="700" /></p> -->
+
+## Highlights
+
+- **Authoritative server:** game rules run on the server at 30 ticks/s; TV and phones only render and send input, which keeps everyone in sync.
+- **Real-time over WebSockets** (Socket.io): rooms, lobby with "ready" and countdown, per-player game over and a final ranking.
+- **Pluggable game engines:** a `GameEngine` interface lets new games plug into a room. Tetris is the first engine and Snake was built as the second to validate the abstraction.
+- **Zero-friction onboarding:** the QR code opens `/j/<ROOM_CODE>` on the phone.
+- **Server unit tests** with Vitest.
+
+## Architecture
+
+| Folder | Content |
+|---|---|
+| `server/` | Node + Express + Socket.io: Tetris rules, rooms, 30-tick game loop |
+| `web/` | Vite + React: `/` is the TV, `/j/CODE` is the phone controller |
+| `shared/` | Types shared between server and web |
+| `docs/` | Vision, decisions, architecture, roadmap, testing strategy (in Portuguese) |
+
+## Running locally
 
 ```bash
 npm install
-npm run dev     # servidor em :3001, web em :5173
-npm test        # testes do servidor (Vitest)
+npm run dev     # server on :3001, web on :5173
+npm test        # server tests (Vitest)
 ```
 
-Abra a TV pelo **IP da rede** (ex.: `http://192.168.x.x:5173`), não por `localhost`, pois o QR usa o endereço da página. Os celulares entram escaneando o QR, na mesma rede.
+Open the TV view using your **network IP** (e.g. `http://192.168.x.x:5173`), not `localhost`, because the QR code uses the page address. Phones join by scanning the QR on the same network.
 
-Variáveis opcionais: `VITE_PUBLIC_URL` (URL pública no QR), `VITE_SERVER_URL` (URL do servidor; padrão `http://<host>:3001`), `CORS_ORIGIN` e `PORT` (servidor).
+Optional env vars: `VITE_PUBLIC_URL` (public URL encoded in the QR), `VITE_SERVER_URL` (server URL, default `http://<host>:3001`), `CORS_ORIGIN` and `PORT` (server).
 
-## Estrutura
+## Status
 
-| Pasta | Conteúdo |
+Phase 1 (Tetris MVP + lobby) is largely implemented: rooms, lobby, Tetris for 1–4 players, rankings, phone controller and local high scores. Still to do: frontend and E2E tests, visual polish, deployment (Railway + Vercel), CI, and validation sessions with 4 real players. See [docs/roadmap.md](docs/roadmap.md).
+
+## Documentation
+
+| Document | Purpose |
 |---|---|
-| `server/` | Node + Express + Socket.io: regras do Tetris, salas, loop de 30 ticks/s |
-| `web/` | Vite + React: `/` é a TV, `/j/CODIGO` é o celular |
-| `docs/` | Documentação do projeto |
-
-## Documentação
-
-| Documento | Para quê |
-|---|---|
-| [docs/visao.md](docs/visao.md) | O que é o produto, público, escopo |
-| [docs/decisoes.md](docs/decisoes.md) | **Regras e decisões do produto** (fonte de verdade) e escolhas provisórias de dev |
-| [docs/arquitetura.md](docs/arquitetura.md) | Arquitetura, estrutura do código, protocolo WebSocket |
-| [docs/roadmap.md](docs/roadmap.md) | Fases, status e riscos |
-| [docs/testes.md](docs/testes.md) | Estratégia de testes e teste manual rápido |
-
-Em caso de conflito entre documentos, vale `docs/decisoes.md`.
+| [docs/visao.md](docs/visao.md) | Product vision, audience, scope |
+| [docs/decisoes.md](docs/decisoes.md) | Product rules and decisions (source of truth) |
+| [docs/arquitetura.md](docs/arquitetura.md) | Architecture, code structure, WebSocket protocol |
+| [docs/roadmap.md](docs/roadmap.md) | Phases, status and risks |
+| [docs/testes.md](docs/testes.md) | Testing strategy |
